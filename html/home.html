@@ -3,51 +3,68 @@
 
 <head>
     <title>Amplifire Road Trip</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"> </script>
+
+    <script type="text/javascript" src="scripts/createTrip.js"></script>
+    <script type="text/javascript" src="scripts/home.js"></script>
+
 </head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" ;> </script>
-<script type="text/javascript" src="home.js"></script>
+
+<header>
+    <a href="home.html">
+        <button>Homepage</button>
+    </a>
+    <div id="signinPrompt">
+        <a href="register.html">
+            <button>Sign up!</button>
+        </a>
+        <a href="login.html">
+            <button>Log in!</button>
+        </a>
+    </div>
+    <div id="logoutPrompt">
+        <input value="Logout" type="button" id="logoutButton" onclick="logout()">
+    </div>
+</header>
 
 <body>
-    <form action="" method="post" id="registerForm">
-        <h1>Register User</h1>
+    <h1>Welcome to Amplifire Roadtrip</h1>
 
-        Username:
-        <input type="text" name="username">
-        <br>
+    <div id="tripMenu">
+        <div id="tripList">
+            <h2>My Trips:</h2>
+            <div id="viewTrips">
 
-        Password:
-        <input type="text" name="password">
-        <br>
+            </div>
 
-        <input value="Submit" type="button" onclick="registerForm()">
-    </form>
-    <br>
-    <form action="" method="post" id="loginForm">
-        <h1>Login</h1>
+            <a href="createTrip.html">
+                <button>Create a New Trip!</button>
+            </a>
+            <p>/////////////////////////////////////////</p>
+        </div>
 
-        Username:
-        <input type="text" name="username">
-        <br>
+        <div id="waypointList"></div>
+        <p>/////////////////////////////////////////</p>
 
-        Password:
-        <input type="text" name="password">
-        <br>
+        <div id="waypointEditor">
+            <form id="waypointForm">
+                <p>Name:</p>
+                <input id="waypointName" type="text" , value="" , name="waypointName">
+                <p>Latitude:</p>
+                <input id="latitude" type="text" , value="" , name="latitude">
+                <p>Longitude:</p>
+                <input id="longitude" type="text" , value="" , name="longitude">
 
-        <input value="Submit" type="button" onclick="loginForm()">
-    </form>
+                <input type="button" , value="Save Waypoint" , onclick="updateWaypoint()">
+            </form>
+        </div>
 
-
-    <br>
-    <input value="Logout" type="button" id="logoutButton" onclick="logout()">
-
-
-    <br>
-    <div id="currentUser">
-        Current User ID:
-        <p id="userId"></p>
+        <p id="status">Status: N/A</p>
     </div>
-
-
 </body>
 
 </html>

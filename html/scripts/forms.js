@@ -27,7 +27,6 @@ function registerForm() {
         success: function (res) {
 
             sessionStorage['userId'] = res.userId;
-            sessionStorage['username'] = res.username;
 
             window.location.replace("home.html");
         },

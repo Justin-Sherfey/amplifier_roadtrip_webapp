@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Amplifire Road Trip</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"> </script>
+
+    <script type="text/javascript" src="scripts/account.js"></script>
+    <script type="text/javascript" src="scripts/global.js"></script>
+
+</head>
+
+<header>
+    <a href="home.html">
+        <button>Homepage</button>
+    </a>
+    <br>
+    <br>
+    <a href="account.html">
+        <button>Account</button>
+    </a>
+    <br>
+    <br>
+    <a href="home.html">
+        <input value="Logout" type="button" id="logoutButton" onclick="logout()">
+    </a>
+</header>
+
+<body>
+
+    <h2>Current User:</h2>
+
+    <div id="currentUser"></div>
+
+    <input value="Edit User" type="button" onclick="editUser()">
+    <input value="Delete User" type="button" onclick="deleteCurrentUser()">
+
+    <div id="userEditor" style="display:none;">
+
+        <h2>User Editor: </h2>
+
+        <form id="userForm">
+
+            <p>Username:</p>
+            <input id="username" type="text" , value="" , name="username">
+
+            <p>Password:</p>
+            <input id="password" type="text" , value="" , name="password">
+
+            <input id="userSubmit" type="button" , value="Save User" , onclick="updateCurrentUser()">
+
+        </form>
+
+    </div>
+
+
+</body>
+
+</html>

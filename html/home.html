@@ -5,7 +5,9 @@
     <title>Amplifire Road Trip</title>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/skeleton.css">
+
     <script src="https://code.jquery.com/jquery-3.3.1.js"
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"> </script>
     <script type="text/javascript" src="scripts/global.js"></script>
@@ -14,91 +16,95 @@
 </head>
 
 <header>
-    <a href="home.html">
-        <button>Homepage</button>
-    </a>
+    <div class="container">
 
-    <div id="signinPrompt">
-        <br>
-        <a href="register.html">
-            <button>Sign up!</button>
-        </a>
-        <br>
-        <br>
-        <a href="login.html">
-            <button>Log in!</button>
-        </a>
-    </div>
-    <div id="logoutPrompt">
-        <br>
-        <a href="account.html">
-            <button>Account</button>
-        </a>
-        <br>
-        <br>
-        <a href="home.html">
-            <input value="Logout" type="button" id="logoutButton" onclick="logout()">
-        </a>
+
+        <div id="signinPrompt">
+            <a href="home.html">
+                <button>Homepage</button>
+            </a>
+            <a href="register.html">
+                <button>Sign up!</button>
+            </a>
+
+            <a href="login.html">
+                <button>Log in!</button>
+            </a>
+        </div>
+        <div id="logoutPrompt">
+            <a href="home.html">
+                <button>Homepage</button>
+            </a>
+            <a href="account.html">
+                <button>Account</button>
+            </a>
+
+            <a href="home.html">
+                <input value="Logout" type="button" id="logoutButton" onclick="logout()">
+            </a>
+        </div>
     </div>
 </header>
 
 <body>
-    <h1>Welcome to Amplifire Roadtrip</h1>
+    <div class="container">
+        <h1>Welcome to Amplifire Roadtrip</h1>
 
-    <div id="tripMenu">
+        <div id="tripMenu">
 
-        <p id="status">Status: N/A</p>
+            <p id="status">Status: N/A</p>
 
-        <h2>My Trips:</h2>
+            <h2>My Trips:</h2>
 
-        <div id="tripList"></div>
+            <div id="tripList"></div>
+            <br><br>
+            <input value="Create a New Trip!" type="button" onclick="createTrip()">
+
+            <div id="tripEditor" style="display:none;">
+
+                <h2>Trip Editor: </h2>
+
+                <form id="tripForm">
+
+                    <p>Name:</p>
+                    <input id="tripName" type="text" , value="" , name="tripName">
+
+                    <input id="tripSubmit" type="button" , value="Save Trip" , onclick="updateTrip()">
+
+                </form>
+
+            </div>
+
+            <div id="waypointList"></div>
+
+            <div id="waypointEditor" style="display:none;">
+
+                <h2>Waypoint Editor: </h2>
+
+                <form id="waypointForm">
+
+                    <p>Name:</p>
+                    <input id="waypointName" type="text" , value="" , name="waypointName">
+
+                    <p>Latitude:</p>
+                    <input id="latitude" type="text" , value="" , name="latitude">
+
+                    <p>Longitude:</p>
+                    <input id="longitude" type="text" , value="" , name="longitude">
+
+                    <input id="waypointSubmit" type="button" , value="Save Waypoint" , onclick="updateWaypoint()">
+
+                </form>
+
+            </div>
+
+        </div>
         <br><br>
-        <input value="Create a New Trip!" type="button" onclick="createTrip()">
 
-        <div id="tripEditor" style="display:none;">
+        <input value="Print All Users" type="button" onclick="printAllUsers()">
 
-            <h2>Trip Editor: </h2>
-
-            <form id="tripForm">
-
-                <p>Name:</p>
-                <input id="tripName" type="text" , value="" , name="tripName">
-
-                <input id="tripSubmit" type="button" , value="Save Trip" , onclick="updateTrip()">
-
-            </form>
-
-        </div>
-
-        <div id="waypointList"></div>
-
-        <div id="waypointEditor" style="display:none;">
-
-            <h2>Waypoint Editor: </h2>
-
-            <form id="waypointForm">
-
-                <p>Name:</p>
-                <input id="waypointName" type="text" , value="" , name="waypointName">
-
-                <p>Latitude:</p>
-                <input id="latitude" type="text" , value="" , name="latitude">
-
-                <p>Longitude:</p>
-                <input id="longitude" type="text" , value="" , name="longitude">
-
-                <input id="waypointSubmit" type="button" , value="Save Waypoint" , onclick="updateWaypoint()">
-
-            </form>
-
-        </div>
-
+        <div id="allUsers"></div>
     </div>
-    <br><br>
-
-    <input value="Print All Users" type="button" onclick="printAllUsers()">
-
-    <div id="allUsers"></div>
 
 </body>
 

@@ -4,7 +4,7 @@ window.onload = async function () {
         document.getElementById('signinPrompt').style.display = 'inline';
     } else {
         document.getElementById('logoutPrompt').style.display = 'inline';
-        user = await getUserById();
+        user = await getUserByJWT();
         displayTrips();
     }
 }
@@ -214,7 +214,3 @@ async function printAllUsers() {
 
     }
 }
-
-
-
-

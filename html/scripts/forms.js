@@ -1,4 +1,3 @@
-
 window.onload = function () {
     if (sessionStorage['jwt'] != null) {
         window.location.replace("home.html");

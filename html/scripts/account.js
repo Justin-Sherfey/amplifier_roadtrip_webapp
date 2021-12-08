@@ -2,7 +2,7 @@ window.onload = async function () {
     if (sessionStorage['jwt'] == null) {
         window.location.replace("home.html");
     } else {
-        user = await getUserById();
+        user = await getUserByJWT();
         displayUser();
     }
 }

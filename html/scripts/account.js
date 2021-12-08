@@ -1,8 +1,8 @@
 window.onload = async function () {
-    if (sessionStorage['userId'] == null) {
+    if (sessionStorage['jwt'] == null) {
         window.location.replace("home.html");
     } else {
-        user = await getUserById(sessionStorage['userId']);
+        user = await getUserById();
         displayUser();
     }
 }

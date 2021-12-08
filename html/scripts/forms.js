@@ -1,6 +1,6 @@
 
 window.onload = function () {
-    if (sessionStorage['userId'] != null) {
+    if (sessionStorage['jwt'] != null) {
         window.location.replace("home.html");
     }
 }
@@ -20,15 +20,13 @@ function registerForm() {
     var formData = getFormData($("#registerForm"));
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/register",
+        url: "http://localhost:5000/register",
         data: formData,
         dataType: "json",
         contentType: "application/json",
         success: function (res) {
 
-            sessionStorage['userId'] = res.userId;
-
-            window.location.replace("home.html");
+            window.location.replace("login.html");
         },
         error: function (res) {
             document.getElementById("statusCode").innerText = "Username already taken!";
@@ -41,14 +39,13 @@ function loginForm() {
     var formData = getFormData($("#loginForm"));
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/login",
+        url: "http://localhost:5000/login",
         data: formData,
         dataType: "json",
         contentType: "application/json",
         success: function (res) {
 
-            sessionStorage['userId'] = res.userId;
-            sessionStorage['username'] = res.username;
+            sessionStorage['jwt'] = res.jwt;
 
             window.location.replace("home.html");
         },

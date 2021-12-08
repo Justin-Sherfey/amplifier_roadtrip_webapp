@@ -1,10 +1,10 @@
 window.onload = async function () {
-    if (sessionStorage['userId'] == null) {
+    if (sessionStorage['jwt'] == null) {
         document.getElementById('tripMenu').innerHTML = '<p>Please log in or create an account.</p>';
-        document.getElementById('logoutPrompt').style.display = 'none';
+        document.getElementById('signinPrompt').style.display = 'inline';
     } else {
-        user = await getUserById(sessionStorage['userId']);
-        document.getElementById('signinPrompt').style.display = 'none';
+        document.getElementById('logoutPrompt').style.display = 'inline';
+        user = await getUserById();
         displayTrips();
     }
 }

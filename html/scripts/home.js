@@ -1,11 +1,15 @@
+// function is called when the page loads
 window.onload = async function () {
-    if (sessionStorage['jwt'] == null) {
-        document.getElementById('tripMenu').innerHTML = '<p>Please log in or create an account.</p>';
-        document.getElementById('signinPrompt').style.display = 'inline';
-    } else {
+
+    // returns true if the user is logged in
+    if (sessionStorage['jwt'] != null) {
         document.getElementById('logoutPrompt').style.display = 'inline';
         user = await getUserByJWT();
         displayTrips();
+    } else {
+        document.getElementById('mainTripsMenu').innerHTML = '<h1>Welcome to Amplifire Roadtrip</h1><p>Please log in or create an account.</p>';
+        document.getElementById('signinPrompt').style.display = 'inline';
+
     }
 }
 
@@ -13,84 +17,39 @@ var user;
 var trip;
 var waypoint;
 
-// DISPLAYS
-
-function displayWaypoints(tripId) {
-
-    $("#waypointList").empty();
-
-    document.getElementById("waypointList").innerHTML = "<h2>Waypoints:<h2>";
-    document.getElementById("waypointEditor").style.display = 'none';
-
-
-    trip = user.trips.find(e => e.tripId == tripId)
-
-
-    if (trip.waypoints.length == 0) {
-        document.getElementById("waypointList").innerHTML += "<p> There are no waypoints. </p>";
-    } else {
-        for (var waypoint of trip.waypoints) {
-            $("#waypointList").append(getWaypointDetails(waypoint));
-        }
-    }
-
-    var createWaypointButton = document.createElement("button");
-    createWaypointButton.setAttribute("onclick", "createWaypoint()");
-    createWaypointButton.innerText = "Create New Waypoint";
-    $("#waypointList").append(document.createElement("br"));
-    $("#waypointList").append(document.createElement("br"));
-
-    $("#waypointList").append(createWaypointButton);
-
-}
-
-function displayTrips() {
-    document.getElementById("tripMenu").style.display = "inline";
-
-    if (user.trips.length == 0) {
-        document.getElementById("tripList").innerHTML += "<p> There are no trips. </p>";
-    } else {
-        for (var trip of user.trips) {
-            $("#tripList").append(getTripDetails(trip))
-        }
-    }
-}
-
+//** 
 // TRIP CRUD
+// CRUDs the Trip on the current user variable
+//** 
 
-function newTrip() {
+function createTrip() {
 
     var arr = {};
-    $.map($("#tripForm").serializeArray(), function (n) {
+
+    // Maps tripEditor to a new key-value array which represents a Trip object. The key corresponds
+    // to a column name, and value is the value of the field
+    $.map($("#tripEditor").serializeArray(), function (n) {
         arr[n["name"]] = n["value"];
     });
 
     user.trips.push(arr);
-    updateUser();
 
-}
+    console.log(user);
 
-function createTrip() {
-    document.getElementById("tripEditor").style.display = 'inline';
-    document.getElementById("tripName").value = "";
-    document.getElementById("tripSubmit").setAttribute("onclick", "newTrip()");
-}
+    updateUser(user);
 
-function editTrip(tripId) {
-    trip = user.trips.find(e => e.tripId == tripId);
-    document.getElementById("tripEditor").style.display = 'inline';
-
-    document.getElementById("tripName").value = trip.tripName;
-
-    document.getElementById("tripSubmit").setAttribute("onclick", "updateTrip()");
 }
 
 function updateTrip() {
-    $.map($("#tripForm").serializeArray(), function (n) {
+
+    // Maps tripEditor to a Trip object which already exsits on the User object. The key corresponds
+    // to a column name, and value is the value of the field
+    $.map($("#tripEditor").serializeArray(), function (n) {
         trip[n["name"]] = n["value"];
     });
 
-    updateUser();
+    // Adds the array (Trip) to the User
+    updateUser(user);
 }
 
 function deleteTrip(tripId) {
@@ -100,60 +59,134 @@ function deleteTrip(tripId) {
         return e != trip;
     });
 
-    updateUser();
+    updateUser(user);
 }
 
-// WAYPOINT CRUD
+//** 
+// Waypoint CRUD
+// CRUDs the Waypoints on the current user variable
+//** 
 
-function newWaypoint() {
+function createWaypoint() {
     var arr = {};
-    $.map($("#waypointForm").serializeArray(), function (n) {
+
+    // Maps waypointEditor to a new key-value array which represents a Waypoint object. The key corresponds
+    // to a column name, and value is the value of the field
+    $.map($("#waypointEditor").serializeArray(), function (n) {
         arr[n["name"]] = n["value"];
     });
 
+    // Adds the array (Waypoint) to the selected trip
     trip.waypoints.push(arr);
-    updateUser();
-}
-
-function createWaypoint() {
-    document.getElementById("waypointEditor").style.display = 'inline';
-    document.getElementById("waypointName").value = "";
-    document.getElementById("latitude").value = "";
-    document.getElementById("longitude").value = "";
-    document.getElementById("waypointSubmit").setAttribute("onclick", "newWaypoint()");
-}
-
-function editWaypoint(waypointId) {
-    waypoint = trip.waypoints.find(e => e.waypointId == waypointId);
-    document.getElementById("waypointEditor").style.display = 'inline';
-
-    document.getElementById("waypointName").value = waypoint.waypointName;
-    document.getElementById("latitude").value = waypoint.latitude;
-    document.getElementById("longitude").value = waypoint.longitude;
-    document.getElementById("waypointSubmit").setAttribute("onclick", "updateWaypoint()");
+    updateUser(user);
 }
 
 function updateWaypoint() {
-    $.map($("#waypointForm").serializeArray(), function (n) {
+
+    // Maps waypointEditor to a Waypoint object which already exsits on the User object. The key corresponds
+    // to a column name, and value is the value of the field
+    $.map($("#waypointEditor").serializeArray(), function (n) {
         waypoint[n["name"]] = n["value"];
     });
 
-    updateUser();
+    updateUser(user);
 }
 
 function deleteWaypoint(waypointId) {
+
+    // set the waypoint that's being deleted to the waypoint that the user selected
     waypoint = trip.waypoints.find(e => e.waypointId == waypointId);
+
+    // Remove the selected waypoint from the trip
     trip.waypoints = $.grep(trip.waypoints, function (e) {
         return e != waypoint;
     });
 
-    updateUser();
+    updateUser(user);
 }
 
+//** 
+// Dynamic Element stuff
+//** 
 
-// DETAILS
+// updates the tripEditor form to contain the proper values 
+function updateTripEditor(tripId) {
+    document.getElementById("tripEditor").style.display = 'inline';
 
-function getTripDetails(trip) {
+    // true if the user is creating a new trip, so no Id was given
+    if (tripId == null) {
+        document.getElementById("tripEditor").style.display = 'inline';
+        document.getElementById("tripName").value = "";
+        document.getElementById("tripSubmit").setAttribute("onclick", "createTrip()");
+    } else {
+
+        // set the trip that's being modified to the trip that the user selected
+        trip = user.trips.find(e => e.tripId == tripId);
+        document.getElementById("tripName").value = trip.tripName;
+        document.getElementById("tripSubmit").setAttribute("onclick", "updateTrip()");
+    }
+}
+
+// updates the waypoint editor form to contain the proper values 
+function updateWaypointEditor(waypointId) {
+
+    document.getElementById("waypointEditor").style.display = 'inline';
+
+    // true if the user is creating a new waypoint, so no Id was given
+    if (waypointId == null) {
+        document.getElementById("waypointName").value = "";
+        document.getElementById("latitude").value = "";
+        document.getElementById("longitude").value = "";
+        document.getElementById("waypointSubmit").setAttribute("onclick", "createWaypoint()");
+    } else {
+
+        // set the waypoint that's being modified to the waypoint that the user selected
+        waypoint = trip.waypoints.find(e => e.waypointId == waypointId);
+
+        document.getElementById("waypointName").value = waypoint.waypointName;
+        document.getElementById("latitude").value = waypoint.latitude;
+        document.getElementById("longitude").value = waypoint.longitude;
+        document.getElementById("waypointSubmit").setAttribute("onclick", "updateWaypoint()");
+    }
+}
+
+// Handles all of the logic for dynamically adding and displaying all of the waypoints for a trip to the DOM
+function displayWaypoints(tripId) {
+
+    // resets the waypoint list and displays the waypoints
+    $("#waypointList").empty();
+    document.getElementById("waypoints").style.display = 'inline';
+
+    trip = user.trips.find(e => e.tripId == tripId)
+
+    // true if the number of waypoints is 0
+    if (trip.waypoints.length == 0) {
+        document.getElementById("waypointList").innerHTML += "<p> There are no waypoints. </p>";
+    } else {
+
+        // for each waypoint, create and add a trip element to the DOM
+        for (var waypoint of trip.waypoints) {
+            $("#waypointList").append(createWaypointElement(waypoint));
+        }
+    }
+}
+
+// Handles all of the logic for dynamically adding and displaying all of the trips to the DOM
+function displayTrips() {
+
+    // true if the number of trips is 0
+    if (user.trips.length == 0) {
+        document.getElementById("tripList").innerHTML += "<p> There are no trips. </p>";
+    } else {
+        // for each trip, create and add a trip element to the DOM
+        for (var trip of user.trips) {
+            $("#tripList").append(createTripElement(trip))
+        }
+    }
+}
+
+// Creates an element with all the info/buttons for a trip. Takes in a trip variable and returns the element
+function createTripElement(trip) {
     var div = document.createElement("div")
 
     var tripDetails = document.createElement("p");
@@ -164,7 +197,7 @@ function getTripDetails(trip) {
     deleteTripButton.innerText = "Delete Trip";
 
     var editTripButton = document.createElement("button");
-    editTripButton.setAttribute("onclick", "editTrip(" + trip.tripId + ")");
+    editTripButton.setAttribute("onclick", "updateTripEditor(" + trip.tripId + ")");
     editTripButton.innerText = "Edit Trip";
 
     var viewWaypointsButton = document.createElement("button");
@@ -179,7 +212,8 @@ function getTripDetails(trip) {
     return div;
 }
 
-function getWaypointDetails(waypoint) {
+// Creates an element with all the info/buttons for a waypoint. Takes in a waypoint variable and returns the element
+function createWaypointElement(waypoint) {
     var div = document.createElement("div");
 
     var waypointpDetails = document.createElement("p");
@@ -193,7 +227,7 @@ function getWaypointDetails(waypoint) {
     deleteButton.innerText = "Delete";
 
     var editButton = document.createElement("button");
-    editButton.setAttribute("onclick", "editWaypoint(" + waypoint.waypointId + ")");
+    editButton.setAttribute("onclick", "updateWaypointEditor(" + waypoint.waypointId + ")");
     editButton.innerText = "Edit Waypoint";
 
     div.append(waypointpDetails);
@@ -201,16 +235,4 @@ function getWaypointDetails(waypoint) {
     div.append(deleteButton);
     div.append(editButton);
     return div;
-}
-
-async function printAllUsers() {
-
-    for (var user of await getAllUsers()) {
-
-        $.map(user, function (value, key) {
-            $("#allUsers").append(key + ": " + value + "<br>");
-        });
-        $("#allUsers").append("<br><br>");
-
-    }
 }

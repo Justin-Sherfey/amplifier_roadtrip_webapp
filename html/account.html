@@ -10,8 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"> </script>
 
-    <script type="text/javascript" src="scripts/account.js"></script>
     <script type="text/javascript" src="scripts/global.js"></script>
+    <script type="text/javascript" src="scripts/account.js"></script>
 
 </head>
 
@@ -24,7 +24,7 @@
             <button>Account</button>
         </a>
         <a href="home.html">
-            <input value="Logout" type="button" id="logoutButton" onclick="logout()">
+            <button id="logoutButton" onclick="logout()">Logout</button>
         </a>
     </div>
 </header>
@@ -34,31 +34,25 @@
 
         <h2>Current User:</h2>
 
-        <div id="currentUser"></div>
+        <div id="userInfo"></div>
 
-        <input value="Edit User" type="button" onclick="editUser()">
-        <input value="Delete User" type="button" onclick="deleteCurrentUser()">
+        <button onclick="updateUserEditor()">Edit User</button>
+        <button onclick="deleteUser()">Delete User</button>
 
-        <div id="userEditor" style="display:none;">
 
+        <form id="userEditor" style="display:none;">
             <h2>User Editor: </h2>
 
-            <form id="userForm">
+            <p>Username:</p>
+            <input id="username" type="text" , value="" , name="username">
 
-                <p>Username:</p>
-                <input id="username" type="text" , value="" , name="username">
+            <p>Password:</p>
+            <input id="password" type="text" , value="" , name="password">
 
-                <p>Password:</p>
-                <input id="password" type="text" , value="" , name="password">
+            <input id="userSubmit" type="button" value="Save User" onclick="updateCurrentUser()">
 
-                <input id="userSubmit" type="button" , value="Save User" , onclick="updateCurrentUser()">
-
-            </form>
-
-        </div>
+        </form>
     </div>
-
-
 </body>
 
 </html>

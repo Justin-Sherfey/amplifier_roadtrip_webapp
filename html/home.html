@@ -11,7 +11,6 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"> </script>
     <script type="text/javascript" src="scripts/global.js"></script>
-
     <script type="text/javascript" src="scripts/home.js"></script>
 </head>
 
@@ -19,7 +18,6 @@
     <div class="container">
 
         <div id="signinPrompt" style="display:none;">
-
             <a href="home.html">
                 <button>Homepage</button>
             </a>
@@ -29,7 +27,6 @@
             <a href="login.html">
                 <button>Log in!</button>
             </a>
-
         </div>
 
         <div id="logoutPrompt" style="display:none;">
@@ -43,73 +40,63 @@
             </a>
 
             <a href="home.html">
-                <input value="Logout" type="button" id="logoutButton" onclick="logout()">
+                <button id="logoutButton" onclick="logout()">Logout</button>
             </a>
-
         </div>
     </div>
 </header>
 
 <body>
-    <div class="container">
+
+
+    <div id="mainTripsMenu" class="container">
         <h1>Welcome to Amplifire Roadtrip</h1>
 
-        <div id="tripMenu">
+        <h2>My Trips:</h2>
 
-            <p id="status">Status: N/A</p>
+        <div id="tripList"></div>
 
-            <h2>My Trips:</h2>
+        <br><br>
 
-            <div id="tripList"></div>
-            <br><br>
-            <input value="Create a New Trip!" type="button" onclick="createTrip()">
+        <button onclick="updateTripEditor(null)">Create a New Trip!</button>
 
-            <div id="tripEditor" style="display:none;">
+        <form id="tripEditor" style="display:none;">
 
-                <h2>Trip Editor: </h2>
+            <h2>Trip Editor: </h2>
 
-                <form id="tripForm">
+            <p>Name:</p>
 
-                    <p>Name:</p>
-                    <input id="tripName" type="text" , value="" , name="tripName">
+            <input id="tripName" type="text" , value="" , name="tripName">
+            <input id="tripSubmit" type="button" value="Save Trip" onclick="updateTrip()">
 
-                    <input id="tripSubmit" type="button" , value="Save Trip" , onclick="updateTrip()">
+        </form>
 
-                </form>
+        <div id="waypoints" style="display:none;">
 
-            </div>
+            <h2>Waypoints:</h2>
 
             <div id="waypointList"></div>
 
-            <div id="waypointEditor" style="display:none;">
+            <button onclick="updateWaypointEditor(null)">Create New Waypoint</button>
 
+            <br><br>
+
+            <form id="waypointEditor" style="display:none;">
                 <h2>Waypoint Editor: </h2>
 
-                <form id="waypointForm">
+                <p>Name:</p>
+                <input id="waypointName" type="text" , value="" , name="waypointName">
 
-                    <p>Name:</p>
-                    <input id="waypointName" type="text" , value="" , name="waypointName">
+                <p>Latitude:</p>
+                <input id="latitude" type="text" , value="" , name="latitude">
 
-                    <p>Latitude:</p>
-                    <input id="latitude" type="text" , value="" , name="latitude">
+                <p>Longitude:</p>
+                <input id="longitude" type="text" , value="" , name="longitude">
+                <input id="waypointSubmit" type="button" value="Save Waypoint" onclick="updateWaypoint()">
 
-                    <p>Longitude:</p>
-                    <input id="longitude" type="text" , value="" , name="longitude">
-
-                    <input id="waypointSubmit" type="button" , value="Save Waypoint" , onclick="updateWaypoint()">
-
-                </form>
-
-            </div>
-
+            </form>
         </div>
-        <br><br>
-
-        <input value="Print All Users" type="button" onclick="printAllUsers()">
-
-        <div id="allUsers"></div>
     </div>
-
 </body>
 
 </html>

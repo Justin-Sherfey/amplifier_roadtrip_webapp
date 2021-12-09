@@ -34,10 +34,7 @@ function createTrip() {
 
     user.trips.push(arr);
 
-    console.log(user);
-
     updateUser(user);
-
 }
 
 function updateTrip() {
@@ -204,10 +201,21 @@ function createTripElement(trip) {
     viewWaypointsButton.setAttribute("onclick", "displayWaypoints(" + trip.tripId + ")");
     viewWaypointsButton.innerText = "View Waypoints";
 
+    let map = document.createElement("div");
+    google.maps.Map(map, {
+        center: {
+            lat: -34.397,
+            lng: 150.644
+        },
+        zoom: 8,
+    });
+
     div.append(tripDetails);
     div.append(deleteTripButton);
     div.append(editTripButton);
     div.append(viewWaypointsButton);
+
+    div.append(map);
 
     return div;
 }

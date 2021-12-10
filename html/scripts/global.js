@@ -1,5 +1,5 @@
 //Globals
-const urlConnection = "https://localhost:5000/"
+const urlConnection = "http://localhost:5000/"
 // const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/"
 
 function logout() {
@@ -11,7 +11,7 @@ function logout() {
 function getUserByJWT() {
     return $.ajax({
         type: "GET",
-        url: urlConnection,
+        url: urlConnection + "users/",
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('jwt')
         },
@@ -29,7 +29,7 @@ function deleteUser() {
 
     return $.ajax({
         type: "DELETE",
-        url: urlConnection + user.userId,
+        url: urlConnection + "users/" + user.userId,
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('jwt')
         },
@@ -47,7 +47,7 @@ function updateUser(user) {
 
     $.ajax({
         type: "PUT",
-        url: urlConnection,
+        url: urlConnection + "users/",
         data: JSON.stringify(user),
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('jwt')
@@ -71,7 +71,7 @@ function updateUser(user) {
 function refreshToken(user) {
     return $.ajax({
         type: "POST",
-        url: urlConnection+"login",
+        url: urlConnection + "login/",
         data: JSON.stringify(user),
         dataType: "json",
         contentType: "application/json",
@@ -91,7 +91,7 @@ function refreshToken(user) {
 function registerForm() {
     $.ajax({
         type: "POST",
-        url: urlConnection+"register",
+        url: urlConnection + "register/",
         data: getFormData($("#registerForm")),
         dataType: "json",
         contentType: "application/json",
@@ -109,7 +109,7 @@ function registerForm() {
 function loginForm() {
     $.ajax({
         type: "POST",
-        url: urlConnection +"login",
+        url: urlConnection + "login/",
         data: getFormData($("#loginForm")),
         dataType: "json",
         contentType: "application/json",

@@ -39,7 +39,7 @@ function initMap() {
     var request = {
         location: sydney,
         radius: '10000',
-        type: ['points of intrest']
+        type: ['points of interest']
     };
 
     var service = new google.maps.places.PlacesService(map);

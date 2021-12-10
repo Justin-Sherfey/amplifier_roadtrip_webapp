@@ -1,3 +1,7 @@
+//Globals
+// const urlConnection = "https://localhost:5000/"
+const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/"
+
 function logout() {
     sessionStorage.clear();
     location.reload();
@@ -7,7 +11,7 @@ function logout() {
 function getUserByJWT() {
     return $.ajax({
         type: "GET",
-        url: "http://localhost:5000/users/",
+        url: urlConnection,
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('jwt')
         },
@@ -25,7 +29,7 @@ function deleteUser() {
 
     return $.ajax({
         type: "DELETE",
-        url: "http://localhost:5000/users/" + user.userId,
+        url: urlConnection + user.userId,
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('jwt')
         },
@@ -43,7 +47,7 @@ function updateUser(user) {
 
     $.ajax({
         type: "PUT",
-        url: "http://localhost:5000/users/",
+        url: urlConnection,
         data: JSON.stringify(user),
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('jwt')
@@ -67,7 +71,7 @@ function updateUser(user) {
 function refreshToken(user) {
     return $.ajax({
         type: "POST",
-        url: "http://localhost:5000/login",
+        url: urlConnection+"login",
         data: JSON.stringify(user),
         dataType: "json",
         contentType: "application/json",
@@ -87,7 +91,7 @@ function refreshToken(user) {
 function registerForm() {
     $.ajax({
         type: "POST",
-        url: "http://localhost:5000/register",
+        url: urlConnection+"register",
         data: getFormData($("#registerForm")),
         dataType: "json",
         contentType: "application/json",
@@ -105,7 +109,7 @@ function registerForm() {
 function loginForm() {
     $.ajax({
         type: "POST",
-        url: "http://localhost:5000/login",
+        url: urlConnection +"login",
         data: getFormData($("#loginForm")),
         dataType: "json",
         contentType: "application/json",

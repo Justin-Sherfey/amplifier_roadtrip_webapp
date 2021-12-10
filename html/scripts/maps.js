@@ -29,14 +29,8 @@ function doTextSearch() {
 
     // create the request to sent to google places api
     var request = {
-<<<<<<< HEAD
-        location: sydney,
-        radius: '10000',
-        type: ['points of interest']
-=======
         // get user generated query
         query: document.getElementById("query").value,
->>>>>>> 24eaec06b481fb3dfed69c743896c866bd64b842
     };
 
     // execute the textSearch (call to places API)

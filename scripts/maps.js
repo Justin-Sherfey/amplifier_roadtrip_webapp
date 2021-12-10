@@ -207,7 +207,6 @@ function generateDirections() {
     // roadtrip coast to coast babbbyyyyyyyyy
 
     directionsService
-        // .route() does the api call to google maps for the directions, i think not sure tho
         .route({
             origin: startGeometry,
             destination: endGeometry,
@@ -216,7 +215,29 @@ function generateDirections() {
             travelMode: google.maps.TravelMode.DRIVING,
         })
         .then((response) => {
+            document.getElementById("directions").append(displayDirections(response.routes[0].legs[0]));
             directionsRenderer.setDirections(response);
         })
         .catch((e) => console.log(e));
+}
+
+function displayDirections(directions) {
+    console.log(directions);
+    var div = document.createElement("div");
+
+    var startPoint = document.createElement("p");
+    startPoint.innerText = ("Begin at: " + directions.start_address);
+    div.append(startPoint);
+
+    directions.steps.forEach(e => {
+        var step = document.createElement("p");
+        step.innerHTML = e.instructions + " for " + e.duration.text + ". Distance: " + e.distance.text;
+        div.append(step);
+    })
+
+    var endPoint = document.createElement("p");
+    endPoint.innerText = ("End at: " + directions.end_address);
+    div.append(endPoint);
+
+    return div;
 }

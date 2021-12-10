@@ -1,4 +1,5 @@
 //Globals
+
 const urlConnection = "http://34.222.84.38:5000/"
 // const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/"
 

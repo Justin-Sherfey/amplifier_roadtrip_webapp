@@ -29,7 +29,7 @@ function deleteUser() {
 
     return $.ajax({
         type: "DELETE",
-        url: urlConnection + "users" + user.userId,
+        url: urlConnection + "users/" + user.userId,
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem('jwt')
         },
@@ -44,7 +44,6 @@ function deleteUser() {
 }
 
 function updateUser(user) {
-
     $.ajax({
         type: "PUT",
         url: urlConnection + "users",
@@ -118,7 +117,6 @@ function loginForm() {
         success: function (res) {
 
             sessionStorage['jwt'] = res.jwt;
-
             window.location.replace("home.html");
         },
         error: function (res) {

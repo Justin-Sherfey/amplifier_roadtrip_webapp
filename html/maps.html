@@ -22,6 +22,22 @@
 
 <body>
     <div id="map"></div>
+    <form>
+        <h2>Search for a Place</h2>
+        <input id="query" type="text">
+        <input type="button" value="Find Place" onclick="doTextSearch()">
+        <input type="button" value="Generate Directions" onclick="generateDirections()">
+    </form>
+
+    <p>///////////////////////////////////</p>
+    <h1>Select a place:</h1>
+
+    <div id="placeSelector"></div>
+
+    <p>///////////////////////////////////</p>
+    <h1>Waypoints:</h1>
+
+    <div id="waypoints"></div>
 </body>
 
 </html>

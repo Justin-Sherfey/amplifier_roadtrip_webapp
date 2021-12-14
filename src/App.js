@@ -4,17 +4,22 @@ import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
+import Login from "./Login";
 
 function App() {
-
   return (
-    <div>
-      <NavigationBar />
-      <h1>Register:</h1>
-      <RegisterForm />
-      <h1>Login:</h1>
-      <LoginForm />
-    </div>
+
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<NavigationBar />}>
+          <Route path="HomePage" element={<HomePage />} />
+          <Route path="Login" element={<LoginForm />} />
+          <Route path="Register" element={<RegisterForm />} />
+          {/* <Route path="*" element={<NoPage />} /> */}
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
@@ -37,7 +42,6 @@ class NavigationBar extends React.Component {
 function RegisterForm() {
   const { register, handleSubmit } = useForm();
   const onSubmit = data => registerUser(JSON.stringify(data));
-
   const registerUser = (data) => {
     axios.post(`http://localhost:5000/register`, data, {
       headers: {
@@ -61,7 +65,6 @@ function RegisterForm() {
 function LoginForm() {
   const { register, handleSubmit } = useForm();
   const onSubmit = data => loginUser(JSON.stringify(data));
-
   const loginUser = (data) => {
     axios.post(`http://localhost:5000/login`, data, {
       headers: {
@@ -72,7 +75,6 @@ function LoginForm() {
         sessionStorage['jwt'] = res.jwt;
         console.log(res);
       })
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

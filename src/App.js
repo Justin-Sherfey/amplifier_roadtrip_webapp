@@ -1,21 +1,31 @@
 import logo from "./logo.svg";
 import React from "react";
 import "./App.css";
+import { Navbar, Container, Nav, Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
     <div>
+      <NavigationBar />
       <RegisterMenu />
     </div>
   );
 }
-class MenuBar extends React.Component {
+class NavigationBar extends React.Component {
   render() {
     return (
       <>
-        <a href="home.html">
-          <button>Homepage</button>
-        </a>
+        <Navbar bg="primary" variant="dark">
+          <Container>
+            <Navbar.Brand href="#home">Amplifire RoadTrip</Navbar.Brand>
+            <Nav className="me-auto">
+              <Nav.Link href="#home">Home</Nav.Link>
+              <Nav.Link href="#features">Features</Nav.Link>
+              <Nav.Link href="#pricing">Pricing</Nav.Link>
+            </Nav>
+          </Container>
+        </Navbar>
       </>
     );
   }
@@ -39,7 +49,7 @@ class RegisterMenu extends React.Component {
           <input type="text" name="password" />
           <br />
 
-          <input value="Submit" type="button" onclick="registerForm()" />
+          <Button varient="info">Submit</Button>
         </form>
       </>
     );

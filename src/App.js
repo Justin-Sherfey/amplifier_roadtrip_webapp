@@ -3,35 +3,53 @@ import React, { useState } from "react";
 import "./App.css";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
+import Login from "./Login";
 
 function App() {
   return (
-    <div>
-      <NavigationBar />
-      <RegisterMenu />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<NavigationBar />}>
+          <Route path="HomePage" element={<HomePage />} />
+          <Route path="Login" element={<LoginMenu />} />
+          <Route path="Register" element={<RegisterMenu />} />
+          {/* <Route path="*" element={<NoPage />} /> */}
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
 class NavigationBar extends React.Component {
   render() {
     return (
       <>
         <Navbar bg="primary" variant="dark">
           <Container>
-            <Navbar.Brand href="#home">Amplifire RoadTrip</Navbar.Brand>
+            <Navbar.Brand as={Link} to="HomePage">
+              Amplifire RoadTrip
+            </Navbar.Brand>
             <Nav className="me-auto">
-              <Nav.Link href="#loginForm">Login</Nav.Link>
-              <Nav.Link href="#registerForm">Register</Nav.Link>
+              <Nav.Link as={Link} to="Login">
+                Login
+              </Nav.Link>
+              <Nav.Link as={Link} to="Register">
+                Register
+              </Nav.Link>
+              <Link to="Register">Register</Link>
             </Nav>
           </Container>
         </Navbar>
+        <Outlet />
       </>
     );
   }
 }
-
-function TestFunction() {
-  return <h1>someText</h1>;
+class HomePage extends React.Component {
+  render() {
+    return <></>;
+  }
 }
 class RegisterMenu extends React.Component {
   render() {
@@ -54,7 +72,7 @@ class RegisterMenu extends React.Component {
     );
   }
 }
-class logginMenu extends React.Component {
+class LoginMenu extends React.Component {
   render() {
     return (
       <>
@@ -66,7 +84,7 @@ class logginMenu extends React.Component {
           Password:
           <input type="text" name="password" />
           <br />
-          <input value="Submit" type="button" onclick="loginForm()" />
+          <Button varient="info">Submit</Button>
         </form>
       </>
     );

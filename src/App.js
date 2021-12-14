@@ -26,16 +26,31 @@ function App() {
 class NavigationBar extends React.Component {
   render() {
     return (
-      <Navbar bg="primary" variant="dark">
-        <Container>
-          <Navbar.Brand href="#home">Amplifire RoadTrip</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="#loginForm">Login</Nav.Link>
-            <Nav.Link href="#registerForm">Register</Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+      <>
+        <Navbar bg="primary" variant="dark">
+          <Container>
+            <Navbar.Brand as={Link} to="HomePage">
+              Amplifire RoadTrip
+            </Navbar.Brand>
+            <Nav className="me-auto">
+              <Nav.Link as={Link} to="Login">
+                Login
+              </Nav.Link>
+              <Nav.Link as={Link} to="Register">
+                Register
+              </Nav.Link>
+              <Link to="Register">Register</Link>
+            </Nav>
+          </Container>
+        </Navbar>
+        <Outlet />
+      </>
     );
+  }
+}
+class HomePage extends React.Component {
+  render() {
+    return <></>;
   }
 }
 
@@ -76,13 +91,14 @@ function LoginForm() {
         console.log(res);
       })
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("username")} />
-      <input {...register("password")} />
-      <input type="submit" />
-    </form>
-  );
+    return (
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input {...register("username")} />
+        <input {...register("password")} />
+        <input type="submit" />
+      </form>
+    );
+  }
 }
 
 export default App;

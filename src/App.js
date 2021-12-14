@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
-import Login from "./Login";
 
 function App() {
   return (
@@ -14,8 +13,8 @@ function App() {
       <Routes>
         <Route path="/" element={<NavigationBar />}>
           <Route path="HomePage" element={<HomePage />} />
-          <Route path="Login" element={<LoginForm />} />
-          <Route path="Register" element={<RegisterForm />} />
+          <Route path="Login" element={<LoginMenu />} />
+          <Route path="Register" element={<RegisterMenu />} />
           {/* <Route path="*" element={<NoPage />} /> */}
         </Route>
       </Routes>
@@ -50,9 +49,32 @@ class NavigationBar extends React.Component {
 }
 class HomePage extends React.Component {
   render() {
-    return <></>;
+    return (<><h1>Home</h1></>);
   }
 }
+
+class LoginMenu extends React.Component {
+  render() {
+    return (
+      <>
+        <h1>Login:</h1>
+        <LoginForm />
+      </>
+    );
+  }
+}
+
+class RegisterMenu extends React.Component {
+  render() {
+    return (
+      <>
+        <h1>Register:</h1>
+        <RegisterForm />
+      </>
+    );
+  }
+}
+
 
 function RegisterForm() {
   const { register, handleSubmit } = useForm();
@@ -90,15 +112,15 @@ function LoginForm() {
         sessionStorage['jwt'] = res.jwt;
         console.log(res);
       })
-
-    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("username")} />
-        <input {...register("password")} />
-        <input type="submit" />
-      </form>
-    );
   }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register("username")} />
+      <input {...register("password")} />
+      <input type="submit" />
+    </form>
+  );
 }
 
 export default App;

@@ -1,7 +1,7 @@
 import logo from "./logo.svg";
 import React, { useState } from "react";
 import "./App.css";
-import { Navbar, Container, Nav, Button } from "react-bootstrap";
+import { Navbar, Container, Row, Nav,Col, Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
     </div>
   );
 }
+
 class NavigationBar extends React.Component {
   render() {
     return (
@@ -30,26 +31,35 @@ class NavigationBar extends React.Component {
   }
 }
 
-function TestFunction() {
-  return <h1>someText</h1>;
-}
 class RegisterMenu extends React.Component {
   render() {
     return (
       <>
-        <form id="registerForm">
-          <h1>Sign up</h1>
+        <Container>
+            <Row>
+              <Col xs={6}>
+            
+              <form id="registerForm">
+              <Form.Group>
+                <h1>Sign up</h1>
 
-          <p>Username:</p>
-          <input type="text" name="username" />
-          <br />
+                <Form.Label>Username:</Form.Label>
+                <Form.Control placeholder="Enter Username"/>
+                <br />
 
-          <p>Password:</p>
-          <input type="text" name="password" />
-          <br />
+                <Form.Label>Password:</Form.Label>
+                <Form.Control placeholder="Enter Password"/>
+                <br />
 
-          <Button varient="info">Submit</Button>
-        </form>
+              </Form.Group>
+                <Button varient="info" type="submit">
+                Submit
+                </Button>
+              </form>
+
+              </Col>
+          </Row>
+        </Container>
       </>
     );
   }

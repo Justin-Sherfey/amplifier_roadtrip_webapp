@@ -1,5 +1,5 @@
 import logo from "./logo.svg";
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,9 +20,8 @@ class NavigationBar extends React.Component {
           <Container>
             <Navbar.Brand href="#home">Amplifire RoadTrip</Navbar.Brand>
             <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#features">Features</Nav.Link>
-              <Nav.Link href="#pricing">Pricing</Nav.Link>
+              <Nav.Link href="#loginForm">Login</Nav.Link>
+              <Nav.Link href="#registerForm">Register</Nav.Link>
             </Nav>
           </Container>
         </Navbar>

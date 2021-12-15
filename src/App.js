@@ -8,7 +8,10 @@ import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 
-import {createSlice,configureStore } from '@reduxjs/toolkit';
+//Redux utils:
+import {useSelector, useDispatch} from 'react-redux'
+import {add_trip,add_waypoint,remove_trip,remove_waypoint} from './actions'
+//import {createSlice,configureStore } from '@reduxjs/toolkit';
 
 function App() {
   return (
@@ -51,40 +54,6 @@ class NavigationBar extends React.Component {
     );
   }
 }
-
-class RegisterMenu extends React.Component {
-  render() {
-    return (
-      <>
-        <Container>
-            <Row>
-              <Col xs={6}>
-            
-              <form id="registerForm">
-              <Form.Group>
-                <h1>Sign up</h1>
-
-                <Form.Label>Username:</Form.Label>
-                <Form.Control placeholder="Enter Username"/>
-                <br />
-
-                <Form.Label>Password:</Form.Label>
-                <Form.Control placeholder="Enter Password"/>
-                <br />
-
-              </Form.Group>
-                <Button varient="info" type="submit">
-                Submit
-                </Button>
-              </form>
-
-              </Col>
-          </Row>
-        </Container>
-       </>
-     );
-   }
-  }
 
 class HomePage extends React.Component {
   render() {

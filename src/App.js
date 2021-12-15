@@ -4,6 +4,7 @@ import { Form, Navbar, Container, Nav, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
+import TripComponent from "./components/TripComponent";
 import { Routes, Route, Link, Outlet, Navigate, useNavigate } from "react-router-dom";
 
 const urlConnection = "http://localhost:5000/"
@@ -60,7 +61,9 @@ function NavigationBar() {
 }
 
 function HomePage() {
-  return (<><h1>Home</h1></>);
+  return (
+    <TripComponent />
+  );
 }
 
 

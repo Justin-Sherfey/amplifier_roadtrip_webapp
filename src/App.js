@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route, Link, Outlet, Navigate } from "react-router-dom";
+import TripComponent from "./components/TripComponent";
 
 const urlConnection = "http://localhost:5000/"
 // const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/"
@@ -56,7 +57,9 @@ function NavigationBar() {
 }
 
 function HomePage() {
-  return (<><h1>Home</h1></>);
+  return (
+    <TripComponent />
+  );
 }
 
 function AccountForm() {

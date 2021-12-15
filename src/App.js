@@ -1,31 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Form, Navbar, Container, Nav, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Routes, Route, Link, Outlet, Navigate } from "react-router-dom";
+import { Routes, Route, Link, Outlet, Navigate, useNavigate } from "react-router-dom";
 
 const urlConnection = "http://localhost:5000/"
 // const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/"
 
 function App() {
 
-  function redirectIfloggedIn(privateRoute) {
-    return sessionStorage.getItem('jwt') ? <Navigate to="/Homepage" /> : privateRoute;
+  const user = getUserByToken().then(res => { return res.data });
+
+  function redirectLoggedIn(privateRoute) {
+    return user ? <Navigate to="/Homepage" /> : privateRoute;
   }
 
-  function redirectIfLoggedOut(privateRoute) {
-    return !sessionStorage.getItem('jwt') ? <Navigate to="/Login" /> : privateRoute;
+  function redirectBadToken(privateRoute) {
+    return !user ? <Navigate to="/Login" /> : privateRoute;
   }
 
   return (
     <Routes>
       <Route path="/" element={<NavigationBar />}>
         <Route path="HomePage" element={<HomePage />} />
-        <Route path="Login" element={redirectIfloggedIn(<LoginForm />)} />
-        <Route path="Register" element={redirectIfloggedIn(<RegisterForm />)} />
-        <Route path="Account" element={redirectIfLoggedOut(<AccountForm />)} />
+        <Route path="Login" element={redirectLoggedIn(<LoginForm />)} />
+        <Route path="Register" element={redirectLoggedIn(<RegisterForm />)} />
+        <Route path="Account" element={redirectBadToken(<AccountForm />)} />
       </Route >
     </Routes >
   );
@@ -46,7 +48,9 @@ function NavigationBar() {
             <Nav.Link as={Link} to="Register">
               Register
             </Nav.Link>
-            <Link to="Register">Register</Link>
+            <Nav.Link as={Link} to="Account">
+              Account
+            </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -59,8 +63,41 @@ function HomePage() {
   return (<><h1>Home</h1></>);
 }
 
+
 function AccountForm() {
-  return (<><h1>Account</h1></>);
+  const { register, handleSubmit } = useForm();
+  const [user, setUser] = useState([]);
+
+  useEffect(() => { getUserByToken().then(res => { setUser(res.data) }); }, []);
+
+  const updateUser = data => {
+    axios.put(urlConnection + "users", JSON.stringify(data), {
+      headers: {
+        'Authorization': "Bearer " + sessionStorage.getItem('jwt'),
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(res => {
+        console.log(res);
+        setUser(res.data)
+      })
+  }
+
+  return (
+    <div>
+      <h1>Account:</h1>
+      <p>Username: {user.username}</p>
+      <p>Password: {user.password}</p>
+      <p>UserID: {user.userId}</p>
+      <Form onSubmit={handleSubmit(updateUser)}>
+        <Form.Label>Username:</Form.Label>
+        <Form.Control {...register("username")}></Form.Control>
+        <Form.Label>Password:</Form.Label>
+        <Form.Control {...register("password")}></Form.Control>
+        <Button variant="primary" type="submit">Submit</Button>
+      </Form>
+    </div>
+  );
 }
 
 function RegisterForm() {
@@ -91,6 +128,7 @@ function RegisterForm() {
 }
 
 function LoginForm() {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const loginUser = data => {
     axios.post(urlConnection + "login", JSON.stringify(data), {
@@ -99,6 +137,7 @@ function LoginForm() {
       }
     })
       .then(res => {
+        navigate('/HomePage')
         sessionStorage['jwt'] = res.data.jwt;
       })
   }
@@ -115,6 +154,14 @@ function LoginForm() {
       </Form>
     </div>
   );
+}
+
+function getUserByToken() {
+  return axios.get(urlConnection + "users", {
+    headers: {
+      'Authorization': "Bearer " + sessionStorage.getItem('jwt')
+    }
+  })
 }
 
 export default App;

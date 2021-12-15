@@ -4,6 +4,8 @@ import "./App.css";
 import { Navbar, Container, Row, Nav,Col, Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import {createSlice,configureStore } from '@reduxjs/toolkit';
+
 function App() {
   return (
     <div>

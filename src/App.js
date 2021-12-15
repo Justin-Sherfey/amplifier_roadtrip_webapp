@@ -14,11 +14,14 @@ function App() {
   const user = getUserByToken().then(res => { return res.data });
 
   function redirectLoggedIn(privateRoute) {
-    return user ? <Navigate to="/Homepage" /> : privateRoute;
+    //return user ? <Navigate to="/Homepage" /> : privateRoute;
+    return privateRoute;
   }
 
   function redirectBadToken(privateRoute) {
-    return !user ? <Navigate to="/Login" /> : privateRoute;
+    //return user ? <Navigate to="/Login" /> : privateRoute;
+    return privateRoute;
+
   }
 
   return (
@@ -79,7 +82,9 @@ function AccountForm() {
       }
     })
       .then(res => {
-        setUser(res.data)
+        sessionStorage['jwt'] = getToken(res.data);
+        setUser(res.data);
+
       })
   }
 
@@ -108,9 +113,6 @@ function RegisterForm() {
         'Content-Type': 'application/json',
       }
     })
-      .then(res => {
-        console.log(res);
-      })
   }
 
   return (
@@ -164,4 +166,14 @@ function getUserByToken() {
   })
 }
 
+function getToken(user) {
+  axios.post(urlConnection + "login", JSON.stringify(user), {
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(res => {
+      sessionStorage['jwt'] = res.data.jwt;
+    })
+}
 export default App;

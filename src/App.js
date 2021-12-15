@@ -11,17 +11,14 @@ const urlConnection = "http://localhost:5000/"
 
 function App() {
 
-  const user = getUserByToken().then(res => { return res.data });
+  const token = sessionStorage.getItem('jwt');
 
   function redirectLoggedIn(privateRoute) {
-    //return user ? <Navigate to="/Homepage" /> : privateRoute;
-    return privateRoute;
+    return token != null ? <Navigate to="/Homepage" /> : privateRoute;
   }
 
   function redirectBadToken(privateRoute) {
-    //return user ? <Navigate to="/Login" /> : privateRoute;
-    return privateRoute;
-
+    return token == null ? <Navigate to="/Login" /> : privateRoute;
   }
 
   return (

@@ -71,14 +71,14 @@ function AccountForm() {
   useEffect(() => { getUserByToken().then(res => { setUser(res.data) }); }, []);
 
   const updateUser = data => {
-    axios.put(urlConnection + "users", JSON.stringify(data), {
+    Object.keys(data).map((key) => user[key] = data[key]);
+    axios.put(urlConnection + "users", JSON.stringify(user), {
       headers: {
         'Authorization': "Bearer " + sessionStorage.getItem('jwt'),
         'Content-Type': 'application/json',
       }
     })
       .then(res => {
-        console.log(res);
         setUser(res.data)
       })
   }

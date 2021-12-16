@@ -1,10 +1,13 @@
 import axios from "axios";
+import userObj from "../../utils/IsAuthContext";
+import { useContext } from "react";
 
 // const urlConnection = "http://localhost:5000/";
-const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/"
+const urlConnection =
+  "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
 
 function getUserByToken(jwt) {
-  axios
+  return axios
     .get(urlConnection + "users", {
       headers: {
         Authorization: "Bearer " + jwt,
@@ -16,32 +19,15 @@ function getUserByToken(jwt) {
 }
 
 function getTokenFromUser(user) {
-  axios
-    .post(urlConnection + "login", JSON.stringify(user), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    .then((res) => {
-      // updating the token
-    });
-}
-
-function loginUser(data) {
-  axios
-    .post(urlConnection + "login", JSON.stringify(data), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    .then((res) => {
-      // set the jwt token session
-      // change the context
-    });
+  return axios.post(urlConnection + "login", JSON.stringify(user), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 function updateUser(user) {
-  axios
+  return axios
     .put(urlConnection + "users", JSON.stringify(user), {
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("jwt"),
@@ -52,7 +38,7 @@ function updateUser(user) {
 }
 
 function registerUser(user) {
-  axios
+  return axios
     .post(urlConnection + "register", JSON.stringify(user), {
       headers: {
         "Content-Type": "application/json",
@@ -61,10 +47,4 @@ function registerUser(user) {
     .then((res) => {});
 }
 
-export {
-  getUserByToken,
-  getTokenFromUser,
-  updateUser,
-  loginUser,
-  registerUser,
-};
+export { getUserByToken, getTokenFromUser, updateUser, registerUser };

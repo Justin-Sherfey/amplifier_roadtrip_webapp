@@ -1,5 +1,6 @@
 import { createContext } from "react";
 
 const isAuth = createContext();
+const user = createContext();
 
-export default isAuth;
+export { isAuth, user };

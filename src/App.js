@@ -3,17 +3,17 @@ import { NavigationBar, Account, Trips, Waypoints, Home, Login, Register, Logout
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState } from "react";
-import isAuth from "./utils/IsAuthContext";
+import { isAuth, userObj } from "./utils/IsAuthContext";
 
 
 
 function App() {
-  const [authenticated] = useState(false);
-  const [user] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [user, setUserObj] = useState(false);
 
   return (
-    <isAuth.Provider value={{ authenticated }} >
-      <user.Provider value={{ user }} >
+    <isAuth.Provider value={{ authenticated, setAuthenticated }} >
+      <userObj.Provider value={{ user, setUserObj }} >
         <Routes>
           <Route path="/" element={<NavigationBar />}>
             <Route path='' element={<PrivateRoute />}>
@@ -27,7 +27,7 @@ function App() {
             <Route path="Logout" element={<Logout />} />
           </Route >
         </Routes >
-      </user.Provider>
+      </userObj.Provider>
     </isAuth.Provider >
   );
 }

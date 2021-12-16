@@ -15,6 +15,7 @@ function Login(props) {
         getUserByToken(res.data.jwt).then((result) => {
           props.setAuthUser(result.data);
           console.log(result.data);
+          sessionStorage["userId"] = result.data.userId;
         });
       } else {
         console.log("Unable to Login:" + res);

@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import TripService from '../services/TripService'
+import React, { useState, useEffect } from 'react';
+import TripService from '../services/TripService';
+import { Form, Button } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+
 
 function TripComponent() {
+
+    const { register, handleSubmit } = useForm();
 
     const [trips, setTrips] = useState([])
 
@@ -21,6 +26,7 @@ function TripComponent() {
     }
 
     return (
+        <>
         <div className="container">
             <h1 className="text-center">Trips</h1>
 
@@ -49,6 +55,14 @@ function TripComponent() {
             </table>
 
         </div>
+        
+        <Form onSubmit={handleSubmit(TripService.createTrip)}>
+            <Form.Label>Trip Name:</Form.Label>
+            <Form.Control {...register("tripName")}></Form.Control>
+            <Button variant="primary" type="submit"> Submit </Button>
+        </Form>
+        
+        </>
     )
 }
 

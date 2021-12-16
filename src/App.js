@@ -22,7 +22,7 @@ function App() {
     <Routes>
       <Route path="/" element={<NavigationBar isLoggedIn={isLoggedIn} />}>
         <Route path="" element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
-          <Route path="Account" element={<Account />} />
+          <Route path="Account" element={<Account authUser={authUser} />} />
           <Route path="Trips" element={<Trips />} />
           <Route path="Waypoints" element={<Waypoints />} />
           <Route

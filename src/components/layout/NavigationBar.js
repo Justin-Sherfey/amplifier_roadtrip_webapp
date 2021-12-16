@@ -6,7 +6,7 @@ export function NavigationBar(props) {
     <>
       <Navbar bg="primary" variant="dark">
         <Container>
-          <Navbar.Brand as={Link} to="HomePage">
+          <Navbar.Brand as={Link} to="Home">
             Amplifire RoadTrip
           </Navbar.Brand>
           <Nav className="me-auto">

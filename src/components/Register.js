@@ -1,7 +1,6 @@
 import { registerUser } from "../services/api/userAPI";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
-
 import { useNavigate } from "react-router-dom";
 
 function Register() {

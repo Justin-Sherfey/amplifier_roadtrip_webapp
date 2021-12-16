@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Component } from "react";
 import "./App.css";
 import { Form, Navbar, Container, Nav, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -11,24 +11,15 @@ const urlConnection = "http://localhost:5000/"
 // const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/"
 
 function App() {
-
-  const token = sessionStorage.getItem('jwt');
-
-  function redirectLoggedIn(privateRoute) {
-    return token != null ? <Navigate to="/Homepage" /> : privateRoute;
-  }
-
-  function redirectBadToken(privateRoute) {
-    return token == null ? <Navigate to="/Login" /> : privateRoute;
-  }
-
   return (
     <Routes>
       <Route path="/" element={<NavigationBar />}>
+        <Route path='' element={<PrivateRoute />}>
+          <Route path='Account' element={<AccountForm />} />
+        </Route>
         <Route path="HomePage" element={<HomePage />} />
-        <Route path="Login" element={redirectLoggedIn(<LoginForm />)} />
-        <Route path="Register" element={redirectLoggedIn(<RegisterForm />)} />
-        <Route path="Account" element={redirectBadToken(<AccountForm />)} />
+        <Route path="Login" element={<LoginForm />} />
+        <Route path="Register" element={<RegisterForm />} />
       </Route >
     </Routes >
   );
@@ -52,6 +43,9 @@ function NavigationBar() {
             <Nav.Link as={Link} to="Account">
               Account
             </Nav.Link>
+            <Nav.Link as={Link} to="LogOut">
+              Log Out
+            </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -64,6 +58,11 @@ function HomePage() {
   return (
     <TripComponent />
   );
+}
+
+function PrivateRoute() {
+
+  return !!sessionStorage.getItem('jwt') ? <Outlet /> : <Navigate to="/HomePage" />;
 }
 
 
@@ -106,12 +105,15 @@ function AccountForm() {
 }
 
 function RegisterForm() {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const registerUser = data => {
     axios.post(urlConnection + "register", JSON.stringify(data), {
       headers: {
         'Content-Type': 'application/json',
       }
+    }).then(res => {
+      navigate('/Login');
     })
   }
 

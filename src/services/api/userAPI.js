@@ -9,7 +9,7 @@ function getUserByToken(jwt) {
             'Authorization': "Bearer " + jwt
         }
     }).then(res => {
-
+        // set usercontext
     })
 }
 
@@ -19,7 +19,7 @@ function getTokenFromUser(user) {
             'Content-Type': 'application/json',
         }
     }).then(res => {
-
+        // updating the token
     })
 }
 
@@ -30,7 +30,8 @@ function loginUser(data) {
             'Content-Type': 'application/json',
         }
     }).then(res => {
-
+        // set the jwt token session 
+        // change the context
     })
 }
 

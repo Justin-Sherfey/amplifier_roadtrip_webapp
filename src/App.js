@@ -1,10 +1,11 @@
 import { NavigationBar, Account, Trips, Waypoints, Home, Login, Register, Logout, PrivateRoute } from "./components/index";
+
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
-import { createContext } from "react";
 import { useState } from "react";
+import isAuth from "./utils/IsAuthContext";
 
-const isAuth = createContext();
+
 
 function App() {
   const [authenticated] = useState(false);

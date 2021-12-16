@@ -31,6 +31,11 @@ class TripService {
         });
     }
 
+    
+    editTrip(trip) {}
+
+    deleteTrip(trip) {}
+
 }
 
 export default new TripService();

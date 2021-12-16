@@ -47,6 +47,7 @@ function TripComponent() {
                     <th>
                         <tr>
                             <th> Trip name</th>
+                            <br></br>
                             <th> Trip id</th>
                         </tr>
                     </th>

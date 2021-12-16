@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import WaypointService from '../services/api/waypointAPI';
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-
+import { useNavigate } from "react-router-dom";
 
 function WaypointComponent() {
 
     const { register, handleSubmit } = useForm();
 
     const [waypoints, setWaypoints] = useState([])
+
+
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -18,7 +21,12 @@ function WaypointComponent() {
 
     const onSubmit = (formData) => {
 
-        WaypointService.createWaypoint(formData);
+        WaypointService.createWaypoint(formData).then((res) => {
+            if(res.status === 200) {
+                navigate("/Trips");
+                navigate("/Waypoints");
+            }
+        });
 
     }
 
@@ -66,10 +74,10 @@ function WaypointComponent() {
         <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Label>Waypoint Name:</Form.Label>
             <Form.Control {...register("waypointName")}></Form.Control>
-            <Form.Label>Longitude:</Form.Label>
-            <Form.Control {...register("Longitude")}></Form.Control>
             <Form.Label>Latitude:</Form.Label>
-            <Form.Control {...register("Latitude")}></Form.Control>
+            <Form.Control {...register("latitude")}></Form.Control>
+            <Form.Label>Longitude:</Form.Label>
+            <Form.Control {...register("longitude")}></Form.Control>
             <Button variant="primary" type="submit"> Submit </Button>
         </Form>
         

@@ -8,7 +8,10 @@ class WaypointService {
     createWaypoint(waypoint) {
         
         return axios.post(WAYPOINTS_REST_API_URL_CREATE, 
-            "{ \"waypointName\": " + JSON.stringify(waypoint.waypointName) + ", \"trip\": { \"tripId\": " + sessionStorage.getItem('tripId') + "} }" , {
+            "{ \"waypointName\": " + JSON.stringify(waypoint.waypointName) + 
+            ", \"latitude\": " + JSON.stringify(waypoint.latitude) + 
+            ", \"longitude\": " + JSON.stringify(waypoint.longitude) +    
+            ", \"trip\": { \"tripId\": " + sessionStorage.getItem('tripId') + "} }" , {
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                 "Content-Type": "application/json",
@@ -28,6 +31,10 @@ class WaypointService {
             }
         });
     }
+
+    editWaypoint(waypoint) {}
+
+    deleteWaypoint(waypointId) {}
 
 }
 

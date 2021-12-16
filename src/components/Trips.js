@@ -1,24 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import TripService from '../services/TripService'
+import React, { useState } from 'react'
 
 function TripComponent() {
 
     const [trips, setTrips] = useState([])
-
-
-    useEffect(() => {
-        getTrips()
-    }, [])
-
-
-
-    const getTrips = () => {
-
-        TripService.getTrips().then((response) => {
-            setTrips(response.data)
-            console.log(response.data);
-        });
-    }
 
     return (
         <div className="container">

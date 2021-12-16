@@ -13,7 +13,6 @@ import {
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState } from "react";
-import isAuth from "./utils/IsAuthContext";
 
 function App() {
   let [authUser, setAuthUser] = useState();
@@ -22,7 +21,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<NavigationBar isLoggedIn={isLoggedIn} />}>
-        <Route path="" element={<PrivateRoute />}>
+        <Route path="" element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
           <Route path="Account" element={<Account />} />
           <Route path="Trips" element={<Trips />} />
           <Route path="Waypoints" element={<Waypoints />} />

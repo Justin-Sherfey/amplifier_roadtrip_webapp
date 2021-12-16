@@ -1,6 +1,6 @@
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { loginUser } from "../../services/api/userAPI";
+import { loginUser } from "../services/api/userAPI";
 
 function Login() {
   const { register, handleSubmit } = useForm();

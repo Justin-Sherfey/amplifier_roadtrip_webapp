@@ -1,4 +1,4 @@
-import { registerUser } from "../../services/api/userAPI";
+import { registerUser } from "../services/api/userAPI";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 

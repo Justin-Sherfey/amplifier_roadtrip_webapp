@@ -1,22 +1,25 @@
+import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import "./assets/css/App.css";
 import {
-  NavigationBar,
-  Account,
-  Trips,
-  Waypoints,
-  Home,
-  Login,
-  Register,
-  Logout,
-  PrivateRoute,
+  Account, Home,
+  Login, Logout, NavigationBar, PrivateRoute, Register, Trips,
+  Waypoints
 } from "./components/index";
 
-import { Routes, Route } from "react-router-dom";
-import "./assets/css/App.css";
-import { useState } from "react";
 
 function App() {
-  let [authUser, setAuthUser] = useState();
-  let [isLoggedIn, setIsLoggedIn] = useState(false);
+  let [authUser, setAuthUser] = useState(
+    JSON.parse(sessionStorage.getItem('user'))
+  );
+
+  let [isLoggedIn, setIsLoggedIn] = useState(
+    !!authUser
+  );
+  console.log(sessionStorage.getItem('user'));
+  let [selectedTrip, setSelectedTrip] = useState(
+    !!authUser ? authUser.trips[0] : null
+  );
 
   return (
     <Routes>
@@ -24,25 +27,11 @@ function App() {
         <Route path="" element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
           <Route path="Account" element={<Account authUser={authUser} />} />
           <Route path="Trips" element={<Trips />} />
-          <Route path="Waypoints" element={<Waypoints />} />
-          <Route
-            path="Logout"
-            element={
-              <Logout setIsLoggedIn={setIsLoggedIn} setAuthUser={setAuthUser} />
-            }
-          />
+          <Route path="Waypoints" element={<Waypoints selectedTrip={selectedTrip} />} />
+          <Route path="Logout" element={<Logout setIsLoggedIn={setIsLoggedIn} setAuthUser={setAuthUser} />} />
         </Route>
         <Route path="Home" element={<Home />} />
-        <Route
-          path="Login"
-          element={
-            <Login
-              setIsLoggedIn={setIsLoggedIn}
-              authUser={authUser}
-              setAuthUser={setAuthUser}
-            />
-          }
-        />
+        <Route path="Login" element={<Login setIsLoggedIn={setIsLoggedIn} authUser={authUser} setAuthUser={setAuthUser} />} />
         <Route path="Register" element={<Register />} />
       </Route>
     </Routes>

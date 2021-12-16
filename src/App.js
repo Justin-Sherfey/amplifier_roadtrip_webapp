@@ -1,75 +1,41 @@
-import logo from "./logo.svg";
-import React, { useState } from "react";
-import "./App.css";
-import { Navbar, Container, Nav, Button } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import "./assets/css/App.css";
+import {
+  Account, Home,
+  Login, Logout, NavigationBar, PrivateRoute, Register, Trips,
+  Waypoints
+} from "./components/index";
+
 
 function App() {
+  let [authUser, setAuthUser] = useState(
+    JSON.parse(sessionStorage.getItem('user'))
+  );
+
+  let [isLoggedIn, setIsLoggedIn] = useState(
+    !!authUser
+  );
+  console.log(sessionStorage.getItem('user'));
+  let [selectedTrip, setSelectedTrip] = useState(
+    !!authUser ? authUser.trips[0] : null
+  );
+
   return (
-    <div>
-      <NavigationBar />
-      <RegisterMenu />
-    </div>
+    <Routes>
+      <Route path="/" element={<NavigationBar isLoggedIn={isLoggedIn} />}>
+        <Route path="" element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
+          <Route path="Account" element={<Account authUser={authUser} />} />
+          <Route path="Trips" element={<Trips />} />
+          <Route path="Waypoints" element={<Waypoints selectedTrip={selectedTrip} />} />
+          <Route path="Logout" element={<Logout setIsLoggedIn={setIsLoggedIn} setAuthUser={setAuthUser} />} />
+        </Route>
+        <Route path="Home" element={<Home />} />
+        <Route path="Login" element={<Login setIsLoggedIn={setIsLoggedIn} authUser={authUser} setAuthUser={setAuthUser} />} />
+        <Route path="Register" element={<Register />} />
+      </Route>
+    </Routes>
   );
 }
-class NavigationBar extends React.Component {
-  render() {
-    return (
-      <>
-        <Navbar bg="primary" variant="dark">
-          <Container>
-            <Navbar.Brand href="#home">Amplifire RoadTrip</Navbar.Brand>
-            <Nav className="me-auto">
-              <Nav.Link href="#loginForm">Login</Nav.Link>
-              <Nav.Link href="#registerForm">Register</Nav.Link>
-            </Nav>
-          </Container>
-        </Navbar>
-      </>
-    );
-  }
-}
 
-function TestFunction() {
-  return <h1>someText</h1>;
-}
-class RegisterMenu extends React.Component {
-  render() {
-    return (
-      <>
-        <form id="registerForm">
-          <h1>Sign up</h1>
-
-          <p>Username:</p>
-          <input type="text" name="username" />
-          <br />
-
-          <p>Password:</p>
-          <input type="text" name="password" />
-          <br />
-
-          <Button varient="info">Submit</Button>
-        </form>
-      </>
-    );
-  }
-}
-class logginMenu extends React.Component {
-  render() {
-    return (
-      <>
-        <form id="loginForm">
-          <h1>Login</h1>
-          Username:
-          <input type="text" name="username" />
-          <br />
-          Password:
-          <input type="text" name="password" />
-          <br />
-          <input value="Submit" type="button" onclick="loginForm()" />
-        </form>
-      </>
-    );
-  }
-}
 export default App;

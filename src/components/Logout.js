@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
 
-function Logout() {
-
-    sessionStorage.clear();
-    return <Navigate to="/HomePage" />;
+function Logout(props) {
+  props.setIsLoggedIn = false;
+  props.setAuthUser(undefined);
+  sessionStorage.clear();
+  return <Navigate to="/HomePage" />;
 }
 
 export default Logout;

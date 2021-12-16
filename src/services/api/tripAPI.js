@@ -16,11 +16,13 @@ class TripService {
                 "Content-Type": "application/json",
             }
         });
+
+        
         
     }
 
     
-    getTrips() {
+    getAllTrips() {
         return axios.get(TRIPS_REST_API_URL_READ + sessionStorage.getItem('userId'), {
             headers: {
               'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),

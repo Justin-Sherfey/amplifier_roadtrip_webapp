@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import TripService from '../services/TripService'
 
 function TripComponent() {
-    
+
     const [trips, setTrips] = useState([])
-    
+
 
     useEffect(() => {
         getTrips()
@@ -13,7 +13,7 @@ function TripComponent() {
 
 
     const getTrips = () => {
-        
+
         TripService.getTrips().then((response) => {
             setTrips(response.data)
             console.log(response.data);
@@ -21,10 +21,10 @@ function TripComponent() {
     }
 
     return (
-        <div className = "container">
-            <h1 className = "text-center">Trips</h1>
+        <div className="container">
+            <h1 className="text-center">Trips</h1>
 
-            <table className = "table table-striped">
+            <table className="table table-striped">
                 <thead>
                     <th>
                         <tr>
@@ -38,11 +38,11 @@ function TripComponent() {
                     {
                         trips.map(
                             trip =>
-                            <tr key = {trip.tripId}>
-                                <td> {trip.tripName }</td>
-                                <td> {trip.tripId }</td>
-                                <td> {trip.waypoints }</td>
-                            </tr>
+                                <tr key={trip.tripId}>
+                                    <td> {trip.tripName}</td>
+                                    <td> {trip.tripId}</td>
+                                    <td> {trip.waypoints}</td>
+                                </tr>
                         )
                     }
                 </tbody>

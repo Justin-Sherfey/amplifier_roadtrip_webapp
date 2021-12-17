@@ -5,53 +5,47 @@ import {
   Waypoints,
   Home,
   Login,
-  Register,
   Logout,
-  PrivateRoute,
+  Register,
+  PrivateRoute
 } from "./components/index";
 
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getUserByToken } from "./services/api/userAPI";
 
+
 function App() {
-  let [authUser, setAuthUser] = useState(
-    getUserByToken().then(res => { return res.data })
-  );
+  let [authUser, setAuthUser] = useState(undefined);
+  console.log("Rendering App!");
 
-  let [isLoggedIn, setIsLoggedIn] = useState(
-    !!authUser
-  );
+  useEffect(() => {
+    sessionStorage.getItem('jwt') ? getUserByToken().then(res => {
+      if (res.status === 200) {
 
-  console.log(sessionStorage.getItem('user'));
+        setAuthUser(res.data);
+      } else {
 
+        console.log("Invalid or Bad Login Token!");
+        sessionStorage.clear();
+        setAuthUser(null);
+      }
+    }) : setAuthUser(null);
+  }, [authUser]);
 
   return (
     <Routes>
-      <Route path="/" element={<NavigationBar isLoggedIn={isLoggedIn} />}>
-        <Route path="" element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
-          <Route path="Account" element={<Account authUser={authUser} />} />
+      <Route path="/" element={<NavigationBar authUser={authUser} />}>
+        <Route path="" element={<PrivateRoute authUser={authUser} />}>
+          <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
           <Route path="Trips" element={<Trips />} />
           <Route path="Waypoints" element={<Waypoints />} />
-          <Route
-            path="Logout"
-            element={
-              <Logout setIsLoggedIn={setIsLoggedIn} setAuthUser={setAuthUser} />
-            }
-          />
         </Route>
         <Route path="Home" element={<Home />} />
-        <Route
-          path="Login"
-          element={
-            <Login
-              setIsLoggedIn={setIsLoggedIn}
-              setAuthUser={setAuthUser}
-            />
-          }
-        />
-        <Route path="Register" element={<Register setIsLoggedIn={setIsLoggedIn} setAuthUser={setAuthUser} />} />
+        <Route path="Logout" element={<Logout />} />
+        <Route path="Login" element={<Login setAuthUser={setAuthUser} />} />
+        <Route path="Register" element={<Register setAuthUser={setAuthUser} />} />
       </Route>
     </Routes>
   );

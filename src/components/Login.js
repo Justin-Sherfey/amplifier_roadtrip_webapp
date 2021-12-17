@@ -11,7 +11,6 @@ function Login(props) {
     getTokenFromUser(formData).then((res) => {
       if (res.status === 200) {
 
-        props.setIsLoggedIn(true);
         sessionStorage["jwt"] = res.data.jwt;
         setUserInfo(res.data.jwt);
 

@@ -2,6 +2,11 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link, Outlet } from "react-router-dom";
 
 export function NavigationBar(props) {
+
+  if (props.authUser === undefined) {
+    return null
+  }
+
   return (
     <>
       <Navbar bg="primary" variant="dark">
@@ -10,7 +15,7 @@ export function NavigationBar(props) {
             Amplifire RoadTrip
           </Navbar.Brand>
           <Nav className="me-auto">
-            {!props.isLoggedIn && (
+            {!!props.authUser === false ? (
               <>
                 <Nav.Link as={Link} to="Login">
                   Login
@@ -19,8 +24,7 @@ export function NavigationBar(props) {
                   Register
                 </Nav.Link>
               </>
-            )}
-            {props.isLoggedIn && (
+            ) : (
               <>
                 <Nav.Link as={Link} to="Account">
                   Account
@@ -28,7 +32,7 @@ export function NavigationBar(props) {
                 <Nav.Link as={Link} to="Trips">
                   Trips
                 </Nav.Link>
-                <Nav.Link as={Link} to="LogOut">
+                <Nav.Link as={Link} to="Logout">
                   Log Out
                 </Nav.Link>
               </>

@@ -10,7 +10,6 @@ function Register(props) {
     registerUser(formData).then((res) => {
       if (res.status === 200) {
 
-        props.setIsLoggedIn(true);
         sessionStorage["jwt"] = res.data.jwt;
         setUserInfo(res.data.jwt);
 

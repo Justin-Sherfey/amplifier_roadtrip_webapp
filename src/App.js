@@ -14,11 +14,14 @@ import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState } from "react";
 
+import MyComponent from "./services/api/googleAPI"
+
 function App() {
   let [authUser, setAuthUser] = useState();
   let [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
+    <>
     <Routes>
       <Route path="/" element={<NavigationBar isLoggedIn={isLoggedIn} />}>
         <Route path="" element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
@@ -46,6 +49,9 @@ function App() {
         <Route path="Register" element={<Register />} />
       </Route>
     </Routes>
+
+    <MyComponent/>
+    </>
   );
 }
 

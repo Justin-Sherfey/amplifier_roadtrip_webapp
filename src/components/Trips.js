@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 
+
+
 function TripComponent() {
 
     const navigate = useNavigate();
@@ -55,17 +57,14 @@ function TripComponent() {
                     {
                         trips.map(
                             trip =>
-                                <tr key={trip.tripId}>
-                                    <td> {trip.tripName}</td>
-                                    <td> {trip.tripId}</td>
-                                </tr>
+                                <Trip key={trip.tripId} trip={trip} />
                         )
                     }
                 </tbody>
             </table>
 
         </div>
-        
+        <><h3>CREATE A NEW TRIP</h3></>
         <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Label>Trip Name:</Form.Label>
             <Form.Control {...register("tripName")}></Form.Control>
@@ -74,6 +73,20 @@ function TripComponent() {
         
         </>
     )
+
+
+}
+function Trip(props) {
+    return (
+      <tr key={props.trip.tripId}>
+        <td>
+          <Button variant="primary">Edit Trip</Button>
+          <Button variant="danger">Delete Trip</Button>
+        </td>
+        <td> {props.trip.tripName}</td>
+        <td> {props.trip.tripId}</td>
+      </tr>
+    );
 }
 
 export default TripComponent

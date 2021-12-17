@@ -10,11 +10,8 @@ import { useNavigate } from "react-router-dom";
 function TripComponent() {
 
     const navigate = useNavigate();
-    
-
     const { register, handleSubmit } = useForm();
-
-    const [trips, setTrips] = useState([])
+    const [trips, setTrips] = useState([]);
 
     const onSubmit = (formData) =>  {
         TripService.createTrip(formData).then((res) => {
@@ -49,7 +46,6 @@ function TripComponent() {
                     <th>
                         <tr>
                             <th> Trip name</th>
-                            <th> Trip id</th>
                         </tr>
                     </th>
                 </thead>
@@ -77,16 +73,39 @@ function TripComponent() {
 
 }
 function Trip(props) {
+
+    const navigate = useNavigate();
+
+    const editTrip = () => {
+        sessionStorage["tripId"] = props.trip.tripId;
+        navigate("/Waypoints");
+    }
+
+    // TODO - figure out how to properly refresh page to update deleted element
+    const deleteTrip = () => {
+        TripService.deleteTrip(props.trip.tripId).then((response) => {
+            if(response.data === true) {
+                navigate("/Account");
+                navigate("/Trips");
+                console.log("deleted");
+            }
+        });
+    }
+
     return (
       <tr key={props.trip.tripId}>
         <td>
-          <Button variant="primary">Edit Trip</Button>
-          <Button variant="danger">Delete Trip</Button>
+          <Button variant="primary" onClick={editTrip}>Edit Trip</Button>
+          <Button variant="danger" onClick={deleteTrip}>Delete Trip</Button>
         </td>
         <td> {props.trip.tripName}</td>
         <td> {props.trip.tripId}</td>
       </tr>
     );
+
+    
+
 }
+
 
 export default TripComponent

@@ -38,7 +38,7 @@ class WaypointService {
             ", \"waypointName\": " + JSON.stringify(waypoint.tripName) +
             ", \"latitude\": " + JSON.stringify(waypoint.latitude) + 
             ", \"longitude\": " + JSON.stringify(waypoint.longitude) + 
-            ", \"trip\": { \"tripId\": " + sessionStorage.getItem("tripId"), {
+            ", \"trip\": { \"tripId\": " + sessionStorage.getItem("tripId") + "} }", {
                 headers: {
                     'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                     "Content-Type": "application/json",
@@ -46,10 +46,13 @@ class WaypointService {
             });
     }
 
-    deleteWaypoint(waypoint) {
-        return axios.delete(WAYPOINTS_REST_API_URL_DELETE + JSON.stringify(waypoint.waypointId), {
+    deleteWaypoint(waypointId) {
+        console.log(waypointId);
+        console.log(WAYPOINTS_REST_API_URL_DELETE + waypointId);
+        return axios.delete(WAYPOINTS_REST_API_URL_DELETE + waypointId, {
             headers: {
-                'Authorization:': 'Bearer ' + sessionStorage.getItem('jwt'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
+                "Content-Type": "application/json",
             }
         })
     }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WaypointService from '../services/api/waypointAPI';
+import TripService from '../services/api/tripAPI';
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,15 @@ function WaypointComponent() {
 
     }
 
+    const rename = (formData) => {
+        TripService.editTrip(formData).then((res)=> {
+            if(res.status === 200) {
+                navigate("/Trips");
+                navigate("/Waypoints");
+            }
+        });
+    }
+
     const getWaypoints = () => {
 
         WaypointService.getAllWaypoints().then((response) => {
@@ -38,10 +48,17 @@ function WaypointComponent() {
         });
     }
 
+    // probably a less sloppy way to retrieve value later
+    TripService.getTrip().then((response) => {
+        sessionStorage["tripName"] = response.data.tripName;
+    });
+
     return (
         <>
+        <h1>{sessionStorage["tripName"]}</h1>
+
         <div className="container">
-            <h1 className="text-center">Waypoints</h1>
+            <h3 className="text-center">Waypoints</h3>
 
             <table className="table table-striped">
                 <thead>
@@ -58,12 +75,7 @@ function WaypointComponent() {
                     {
                         waypoints.map(
                             waypoint =>
-                                <tr key={waypoint.waypointId}>
-                                    <td> {waypoint.waypointName}</td>
-                                    <td> {waypoint.tripId}</td>
-                                    <td> {waypoint.latitude}</td>
-                                    <td> {waypoint.longitude}</td>
-                                </tr>
+                            <Waypoint key={waypoint.waypointId} waypoint={waypoint} />
                         )
                     }
                 </tbody>
@@ -71,6 +83,12 @@ function WaypointComponent() {
 
         </div>
         
+        <Form onSubmit={handleSubmit(rename)}>
+            <Form.Label>Edit New Trip name:</Form.Label>
+            <Form.Control {...register("tripName")}></Form.Control>
+            <Button variant="primary" type="submit"> Rename </Button>
+        </Form>
+
         <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Label>Waypoint Name:</Form.Label>
             <Form.Control {...register("waypointName")}></Form.Control>
@@ -80,9 +98,44 @@ function WaypointComponent() {
             <Form.Control {...register("longitude")}></Form.Control>
             <Button variant="primary" type="submit"> Submit </Button>
         </Form>
+
         
+        
+
+
         </>
     )
+}
+
+function Waypoint(props) {
+
+    const navigate = useNavigate();
+
+    const editWaypoint = () => {
+        
+    }
+
+    // TODO - figure out how to properly refresh page to update deleted element
+    const deleteWaypoint = () => {
+        WaypointService.deleteWaypoint(props.waypoint.waypointId).then((response) => {
+            if(response.data === true) {
+                navigate("/Trips");
+                navigate("/Waypoints");
+                console.log("deleted");
+            }
+        });
+    }
+
+    return (
+      <tr key={props.waypoint.waypointId}>
+        <td>
+          <Button variant="danger" onClick={deleteWaypoint}>Delete Waypoint</Button>
+        </td>
+        <td> {props.waypoint.waypointName}</td>
+        <td> {props.waypoint.latitude}</td>
+        <td> {props.waypoint.longitude}</td>
+      </tr>
+    );
 }
 
 export default WaypointComponent

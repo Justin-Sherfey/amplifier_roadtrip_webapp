@@ -4,15 +4,19 @@ import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-function TripComponent() {
+function TripComponent(props) {
+    console.log(props.authUser.userId);
 
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm();
     const [trips, setTrips] = useState([]);
 
-    const onSubmit = (formData) =>  {
+    const onSubmit = (formData) => {
+
+        formData[userId] = props.authUser.userId;
+        console.log(formData);
         TripService.createTrip(formData).then((res) => {
-            if(res.status === 200) {
+            if (res.status === 200) {
                 sessionStorage["tripId"] = res.data.tripId;
                 navigate("/Waypoints");
             }
@@ -23,11 +27,8 @@ function TripComponent() {
         getTrips()
     }, [])
 
-
-
     const getTrips = () => {
-
-        TripService.getAllTrips().then((response) => {
+        TripService.getAllTrips(props.authUser.userId).then((response) => {
             setTrips(response.data)
             console.log(response.data);
         });
@@ -35,35 +36,35 @@ function TripComponent() {
 
     return (
         <>
-        <div className="container">
-            <h1 className="text-center">Trips</h1>
+            <div className="container">
+                <h1 className="text-center">Trips</h1>
 
-            <table className="table table-striped">
-                <thead>
-                    <th>
-                        <tr>
-                            <th> Trip name</th>
-                        </tr>
-                    </th>
-                </thead>
-                <tbody>
-                    {
-                        trips.map(
-                            trip =>
-                                <Trip key={trip.tripId} trip={trip} />
-                        )
-                    }
-                </tbody>
-            </table>
+                <table className="table table-striped">
+                    <thead>
+                        <th>
+                            <tr>
+                                <th> Trip name</th>
+                            </tr>
+                        </th>
+                    </thead>
+                    <tbody>
+                        {
+                            trips.map(
+                                trip =>
+                                    <Trip key={trip.tripId} trip={trip} />
+                            )
+                        }
+                    </tbody>
+                </table>
 
-        </div>
-        <><h3>CREATE A NEW TRIP</h3></>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-            <Form.Label>Trip Name:</Form.Label>
-            <Form.Control {...register("tripName")}></Form.Control>
-            <Button variant="primary" type="submit"> Submit </Button>
-        </Form>
-        
+            </div>
+            <><h3>CREATE A NEW TRIP</h3></>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form.Label>Trip Name:</Form.Label>
+                <Form.Control {...register("tripName")}></Form.Control>
+                <Button variant="primary" type="submit"> Submit </Button>
+            </Form>
+
         </>
     )
 
@@ -81,7 +82,7 @@ function Trip(props) {
     // TODO - figure out how to properly refresh page to update deleted element
     const deleteTrip = () => {
         TripService.deleteTrip(props.trip.tripId).then((response) => {
-            if(response.data === true) {
+            if (response.data === true) {
                 navigate("/Account");
                 navigate("/Trips");
                 console.log("deleted");
@@ -90,17 +91,17 @@ function Trip(props) {
     }
 
     return (
-      <tr key={props.trip.tripId}>
-        <td>
-          <Button variant="primary" onClick={editTrip}>Edit Trip</Button>
-          <Button variant="danger" onClick={deleteTrip}>Delete Trip</Button>
-        </td>
-        <td> {props.trip.tripName}</td>
-        <td> {props.trip.tripId}</td>
-      </tr>
+        <tr key={props.trip.tripId}>
+            <td>
+                <Button variant="primary" onClick={editTrip}>Edit Trip</Button>
+                <Button variant="danger" onClick={deleteTrip}>Delete Trip</Button>
+            </td>
+            <td> {props.trip.tripName}</td>
+            <td> {props.trip.tripId}</td>
+        </tr>
     );
 
-    
+
 
 }
 

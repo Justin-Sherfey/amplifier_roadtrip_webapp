@@ -5,7 +5,7 @@ import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-function WaypointComponent() {
+function WaypointComponent(props) {
 
     const { register, handleSubmit } = useForm();
 
@@ -23,7 +23,7 @@ function WaypointComponent() {
     const onSubmit = (formData) => {
 
         WaypointService.createWaypoint(formData).then((res) => {
-            if(res.status === 200) {
+            if (res.status === 200) {
                 navigate("/Trips");
                 navigate("/Waypoints");
             }
@@ -32,8 +32,11 @@ function WaypointComponent() {
     }
 
     const rename = (formData) => {
-        TripService.editTrip(formData).then((res)=> {
-            if(res.status === 200) {
+        let trip = props.trip
+        Object.entries(formData).map(([key, value]) => { trip[key] = value });
+        TripService.editTrip(trip).then((res) => {
+            if (res.status === 200) {
+                props.setTrip(trip);
                 navigate("/Trips");
                 navigate("/Waypoints");
             }
@@ -55,53 +58,49 @@ function WaypointComponent() {
 
     return (
         <>
-        <h1>{sessionStorage["tripName"]}</h1>
+            <h1>{sessionStorage["tripName"]}</h1>
 
-        <div className="container">
-            <h3 className="text-center">Waypoints</h3>
+            <div className="container">
+                <h3 className="text-center">Waypoints</h3>
 
-            <table className="table table-striped">
-                <thead>
-                    <th>
-                        <tr>
-                            <th> Waypoint name</th>
-                            <th> Waypoint id</th>
-                            <th> Latitude</th>
-                            <th> Longitude</th>
-                        </tr>
-                    </th>
-                </thead>
-                <tbody>
-                    {
-                        waypoints.map(
-                            waypoint =>
-                            <Waypoint key={waypoint.waypointId} waypoint={waypoint} />
-                        )
-                    }
-                </tbody>
-            </table>
+                <table className="table table-striped">
+                    <thead>
+                        <th>
+                            <tr>
+                                <th> Waypoint name</th>
+                                <th> Waypoint id</th>
+                                <th> Latitude</th>
+                                <th> Longitude</th>
+                            </tr>
+                        </th>
+                    </thead>
+                    <tbody>
+                        {
+                            waypoints.map(
+                                waypoint =>
+                                    <Waypoint key={waypoint.waypointId} waypoint={waypoint} />
+                            )
+                        }
+                    </tbody>
+                </table>
 
-        </div>
-        
-        <Form onSubmit={handleSubmit(rename)}>
-            <Form.Label>Edit New Trip name:</Form.Label>
-            <Form.Control {...register("tripName")}></Form.Control>
-            <Button variant="primary" type="submit"> Rename </Button>
-        </Form>
+            </div>
 
-        <Form onSubmit={handleSubmit(onSubmit)}>
-            <Form.Label>Waypoint Name:</Form.Label>
-            <Form.Control {...register("waypointName")}></Form.Control>
-            <Form.Label>Latitude:</Form.Label>
-            <Form.Control {...register("latitude")}></Form.Control>
-            <Form.Label>Longitude:</Form.Label>
-            <Form.Control {...register("longitude")}></Form.Control>
-            <Button variant="primary" type="submit"> Submit </Button>
-        </Form>
+            <Form onSubmit={handleSubmit(rename)}>
+                <Form.Label>Edit New Trip name:</Form.Label>
+                <Form.Control {...register("tripName")}></Form.Control>
+                <Button variant="primary" type="submit"> Rename </Button>
+            </Form>
 
-        
-        
-
+            <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form.Label>Waypoint Name:</Form.Label>
+                <Form.Control {...register("waypointName")}></Form.Control>
+                <Form.Label>Latitude:</Form.Label>
+                <Form.Control {...register("latitude")}></Form.Control>
+                <Form.Label>Longitude:</Form.Label>
+                <Form.Control {...register("longitude")}></Form.Control>
+                <Button variant="primary" type="submit"> Submit </Button>
+            </Form>
 
         </>
     )
@@ -112,13 +111,13 @@ function Waypoint(props) {
     const navigate = useNavigate();
 
     const editWaypoint = () => {
-        
+
     }
 
     // TODO - figure out how to properly refresh page to update deleted element
     const deleteWaypoint = () => {
         WaypointService.deleteWaypoint(props.waypoint.waypointId).then((response) => {
-            if(response.data === true) {
+            if (response.data === true) {
                 navigate("/Trips");
                 navigate("/Waypoints");
                 console.log("deleted");
@@ -127,14 +126,14 @@ function Waypoint(props) {
     }
 
     return (
-      <tr key={props.waypoint.waypointId}>
-        <td>
-          <Button variant="danger" onClick={deleteWaypoint}>Delete Waypoint</Button>
-        </td>
-        <td> {props.waypoint.waypointName}</td>
-        <td> {props.waypoint.latitude}</td>
-        <td> {props.waypoint.longitude}</td>
-      </tr>
+        <tr key={props.waypoint.waypointId}>
+            <td>
+                <Button variant="danger" onClick={deleteWaypoint}>Delete Waypoint</Button>
+            </td>
+            <td> {props.waypoint.waypointName}</td>
+            <td> {props.waypoint.latitude}</td>
+            <td> {props.waypoint.longitude}</td>
+        </tr>
     );
 }
 

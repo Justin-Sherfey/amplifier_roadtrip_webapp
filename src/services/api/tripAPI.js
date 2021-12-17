@@ -11,8 +11,7 @@ const TRIPS_REST_API_URL_READ = urlConnection + 'trips/';
 class TripService {
 
     createTrip(trip) {
-        return axios.post(TRIPS_REST_API_URL_CREATE_UPDATE,
-            "{ \"tripName\": " + JSON.stringify(trip.tripName) + ", \"user\": { \"userId\": " + sessionStorage.getItem('userId') + "} }", {
+        return axios.post(TRIPS_REST_API_URL_CREATE_UPDATE, trip, {
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                 "Content-Type": "application/json",
@@ -20,8 +19,8 @@ class TripService {
         });
     }
 
-    getAllTrips() {
-        return axios.get(TRIPS_REST_API_URL_READ_ALL + sessionStorage.getItem('userId'), {
+    getAllTrips(userId) {
+        return axios.get(TRIPS_REST_API_URL_READ_ALL, userId, {
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                 "Content-Type": "application/json",
@@ -39,10 +38,7 @@ class TripService {
     }
 
     editTrip(trip) {
-        return axios.put(TRIPS_REST_API_URL_CREATE_UPDATE,
-            "{ \"tripId\": " + sessionStorage.getItem('tripId') +
-            ", \"tripName\": " + JSON.stringify(trip.tripName) +
-            ", \"user\": { \"userId\": " + sessionStorage.getItem("userId") + "} }", {
+        return axios.put(TRIPS_REST_API_URL_CREATE_UPDATE, JSON.stringify(trip), {
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                 "Content-Type": "application/json",

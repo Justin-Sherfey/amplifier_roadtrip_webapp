@@ -27,7 +27,7 @@ function App() {
       <Route path="/" element={<NavigationBar authUser={authUser} setAuthUser={setAuthUser} />}>
         <Route path="" element={<PrivateRoute authUser={authUser} />}>
           <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
-          <Route path="Trips" element={<Trips />} />
+          <Route path="Trips" element={<Trips authUser={authUser} />} />
           <Route path="Waypoints" element={<Waypoints />} />
         </Route>
         <Route path="Home" element={<Home />} />

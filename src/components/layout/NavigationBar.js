@@ -7,6 +7,11 @@ export function NavigationBar(props) {
     return null
   }
 
+  function logout(props) {
+    sessionStorage.clear();
+    props.setAuthUser(undefined);
+  }
+
   return (
     <>
       <Navbar bg="primary" variant="dark">
@@ -32,7 +37,7 @@ export function NavigationBar(props) {
                 <Nav.Link as={Link} to="Trips">
                   Trips
                 </Nav.Link>
-                <Nav.Link as={Link} to="Logout">
+                <Nav.Link onClick={logout} as={Link} to="Home">
                   Log Out
                 </Nav.Link>
               </>

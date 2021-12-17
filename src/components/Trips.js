@@ -4,9 +4,6 @@ import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-
-
-
 function TripComponent() {
 
     const navigate = useNavigate();

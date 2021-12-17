@@ -1,14 +1,17 @@
-import { updateUser } from "../services/api/userAPI";
+import { getUserByToken, updateUser } from "../services/api/userAPI";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-
+import { setState } from "react";
 export function Account(props) {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = formData => {
-    Object.entries(formData).map(([key, value]) => { props.authUser[key] = value });
-    updateUser(props.authUser).then(res => {
+    let user = props.authUser;
+
+    Object.entries(formData).map(([key, value]) => { user[key] = value });
+    updateUser(user).then(res => {
       sessionStorage["jwt"] = res.data.jwt;
+      props.setAuthUser(user);
     })
   }
 

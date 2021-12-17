@@ -13,10 +13,19 @@ import {
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState } from "react";
+import { getUserByToken } from "./services/api/userAPI";
 
 function App() {
-  let [authUser, setAuthUser] = useState();
-  let [isLoggedIn, setIsLoggedIn] = useState(false);
+  let [authUser, setAuthUser] = useState(
+    getUserByToken().then(res => { return res.data })
+  );
+
+  let [isLoggedIn, setIsLoggedIn] = useState(
+    !!authUser
+  );
+
+  console.log(sessionStorage.getItem('user'));
+
 
   return (
     <Routes>
@@ -38,12 +47,11 @@ function App() {
           element={
             <Login
               setIsLoggedIn={setIsLoggedIn}
-              authUser={authUser}
               setAuthUser={setAuthUser}
             />
           }
         />
-        <Route path="Register" element={<Register />} />
+        <Route path="Register" element={<Register setIsLoggedIn={setIsLoggedIn} setAuthUser={setAuthUser} />} />
       </Route>
     </Routes>
   );

@@ -1,20 +1,31 @@
-import { registerUser } from "../services/api/userAPI";
+import { registerUser, getUserByToken } from "../services/api/userAPI";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-function Register() {
+function Register(props) {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const onSubmit = (formData) => {
     registerUser(formData).then((res) => {
       if (res.status === 200) {
-        navigate("/Login");
+
+        props.setIsLoggedIn(true);
+        sessionStorage["jwt"] = res.data.jwt;
+        setUserInfo(res.data.jwt);
+
       } else {
-        console.log("Unable to Register User:" + res);
+        console.log("Unable to Register:" + res);
       }
     });
   };
+
+  const setUserInfo = (jwt) => {
+    getUserByToken(jwt).then((result) => {
+      props.setAuthUser(result.data);
+      navigate("/Home");
+    });
+  }
 
   return (
     <>

@@ -6,22 +6,27 @@ import { getTokenFromUser, getUserByToken } from "../services/api/userAPI";
 function Login(props) {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
+
   const onSubmit = (formData) => {
     getTokenFromUser(formData).then((res) => {
       if (res.status === 200) {
+
         props.setIsLoggedIn(true);
         sessionStorage["jwt"] = res.data.jwt;
-        navigate("/Home");
-        getUserByToken(res.data.jwt).then((result) => {
-          props.setAuthUser(result.data);
-          console.log(result.data);
-          sessionStorage["userId"] = result.data.userId;
-        });
+        setUserInfo(res.data.jwt);
+
       } else {
         console.log("Unable to Login:" + res);
       }
     });
   };
+
+  const setUserInfo = (jwt) => {
+    getUserByToken(jwt).then((result) => {
+      props.setAuthUser(result.data);
+      navigate("/Home");
+    });
+  }
 
   return (
     <>

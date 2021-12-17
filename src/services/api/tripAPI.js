@@ -1,27 +1,30 @@
 import axios from 'axios';
 
-const TRIPS_REST_API_URL_CREATE_UPDATE = 'http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/trips';
-const TRIPS_REST_API_URL_READ_ALL = 'http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/trips/getAll/';
-const TRIPS_REST_API_URL_DELETE = 'http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/trips/';
-const TRIPS_REST_API_URL_READ = 'http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/trips/';
+const urlConnection = "http://localhost:5000/"
+//const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
+
+const TRIPS_REST_API_URL_CREATE_UPDATE = urlConnection + 'trips';
+const TRIPS_REST_API_URL_READ_ALL = urlConnection + 'trips/getAll/';
+const TRIPS_REST_API_URL_DELETE = urlConnection + 'trips/';
+const TRIPS_REST_API_URL_READ = urlConnection + 'trips/';
 
 class TripService {
 
     createTrip(trip) {
-        return axios.post(TRIPS_REST_API_URL_CREATE_UPDATE, 
-            "{ \"tripName\": " + JSON.stringify(trip.tripName) + ", \"user\": { \"userId\": " + sessionStorage.getItem('userId') + "} }" , {
+        return axios.post(TRIPS_REST_API_URL_CREATE_UPDATE,
+            "{ \"tripName\": " + JSON.stringify(trip.tripName) + ", \"user\": { \"userId\": " + sessionStorage.getItem('userId') + "} }", {
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                 "Content-Type": "application/json",
             }
-        }); 
+        });
     }
 
     getAllTrips() {
         return axios.get(TRIPS_REST_API_URL_READ_ALL + sessionStorage.getItem('userId'), {
             headers: {
-              'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
-              "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
+                "Content-Type": "application/json",
             }
         });
     }
@@ -31,20 +34,20 @@ class TripService {
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                 "Content-Type": "application/json",
-              }
+            }
         });
     }
 
     editTrip(trip) {
         return axios.put(TRIPS_REST_API_URL_CREATE_UPDATE,
-            "{ \"tripId\": " + sessionStorage.getItem('tripId') + 
+            "{ \"tripId\": " + sessionStorage.getItem('tripId') +
             ", \"tripName\": " + JSON.stringify(trip.tripName) +
             ", \"user\": { \"userId\": " + sessionStorage.getItem("userId") + "} }", {
-                headers: {
-                    'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
-                    "Content-Type": "application/json",
-                }
-            });
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
+                "Content-Type": "application/json",
+            }
+        });
     }
 
     deleteTrip(tripId) {

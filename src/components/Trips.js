@@ -12,8 +12,7 @@ function TripComponent(props) {
     const [trips, setTrips] = useState([]);
 
     const onSubmit = (formData) => {
-
-        formData[userId] = props.authUser.userId;
+        formData["user"] = props.authUser;
         console.log(formData);
         TripService.createTrip(formData).then((res) => {
             if (res.status === 200) {

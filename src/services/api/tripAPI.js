@@ -20,7 +20,7 @@ class TripService {
     }
 
     getAllTrips(userId) {
-        return axios.get(TRIPS_REST_API_URL_READ_ALL, userId, {
+        return axios.get(TRIPS_REST_API_URL_READ_ALL + userId, {
             headers: {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('jwt'),
                 "Content-Type": "application/json",

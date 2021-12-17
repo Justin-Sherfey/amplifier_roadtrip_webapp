@@ -1,5 +1,5 @@
 import React from 'react'
-import {GoogleMap,Marker,StandaloneSearchBox, LoadScript} from '@react-google-maps/api';
+import {GoogleMap,Marker, LoadScript} from '@react-google-maps/api';
 
 //Just testing so far
 
@@ -26,22 +26,20 @@ const end_position = {
 
 function MyComponent(){
 
+    /*
     const [map,setMap] = React.useState(null)
 
-    const onLoad = ref => this.searchBox = ref;
-    /*
+    // const onLoad = ref => this.searchBox = ref;
     const onLoad = React.useCallback(function callback(map){
         const bounds = new window.google.maps.LatLngBounds();
         map.fitBounds(bounds);
         setMap(map)
     },[])
-    */
-
-    const onPlacesChanged = () => console.log(this.searchBox.getPlaces()); //Triggered when a user selects a query
 
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null)
     }, [])
+    */
 
     // const waypoints = []; //TODO
 
@@ -53,33 +51,15 @@ function MyComponent(){
             <GoogleMap
             id = "map-example"
             mapContainerStyle={containerStyle}
-            zoom={5}
+            zoom={4}
+            /*
             onLoad = {onLoad}
             onUnmount={onUnmount}
+            */
             center = {center}
             >
-                {/*Child components, such as markers, info windows, etc. */}
+                {/*Child components, such as markers, info windows, etc.: */}
                 <>
-                <StandaloneSearchBox onPlacesChanged={onPlacesChanged} onLoad={onLoad}>
-                    <input 
-                    type="text" placeholder="Search for a point of interest..."
-                     style={{
-                        boxSizing: `border-box`,
-                        border: `1px solid transparent`,
-                        width: `240px`,
-                        height: `32px`,
-                        padding: `0 12px`,
-                        borderRadius: `3px`,
-                        boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                        fontSize: `14px`,
-                        outline: `none`,
-                        textOverflow: `ellipses`,
-                        position: "absolute",
-                        left: "50%",
-                        marginLeft: "-120px"
-                      }}
-                    />
-                </StandaloneSearchBox>
 
                 <Marker position={start_position}/>
                 <Marker position={end_position}/>

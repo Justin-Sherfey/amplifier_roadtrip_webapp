@@ -1,5 +1,5 @@
 import React from 'react'
-import {GoogleMap,Marker, LoadScript} from '@react-google-maps/api';
+import {GoogleMap,Marker, LoadScript, InfoWindow} from '@react-google-maps/api';
 
 //Just testing so far
 
@@ -24,63 +24,66 @@ const end_position = {
     lng: -118.243
 }
 
-function searchForm(){ //TODO
-    const [input, setInput] = React.useState('');
-
-    return(
-        <form onSubmit={doTextSearch}>
-            <label for="pointOfInterest">search for a point of interest</label>
-            <input id='pointOfInterest' type="text" value={input} onInput={e => setInput(e.target.value)}/>
-            <input type="submit" value="Search"/>
-        </form>
-    );
-}
-
 function MyComponent(){
 
+    //Local values:
+    //Contains all user selected POI markers
+    var markersArray = [];//could probably also be replaced by a useState
+    //individual info window per marker
+    var infoWindow;
+    //Maintain an instance of user input
+    const [input, setInput] = React.useState('');
     //Maintain an instance of the map
-    const [map,setMap] = React.useState(null)
+    const [map,setMap] = React.useState(null);
 
-    // const onLoad = ref => this.searchBox = ref;
+    //Map utils:
     const onLoad = React.useCallback(function callback(map){
         const bounds = new window.google.maps.LatLngBounds();//This messes w/ init. centering. Don't know the proper way yet. 
         map.fitBounds(bounds);
         setMap(map)
     },[])
-
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null)
     }, [])
 
     //POI suggestion utils:
-    var markersArray = []; //Contains all user selected POI markers
-
     function clearMarkers(){
-        for(var marker of markersArray){
-            marker.setMap(null);
-        }
-        markersArray.length=0;
+        markersArray = []
     }
     function createMarker(place){
         // if not a valid place then return
         if(!place.geometry || !place.geometry.location)return;
 
-        var marker = new google.maps.Marker({
-            map,
-            position: place.google.location
-        });
-
+        // contentString appears above a waypoint on the map when you hover your mouse over it
         let contentString = place.name + "\n\n" + place.formatted_address;
-        //TODO
         
-        markersArray.push(marker);
+        markersArray.push(<Marker
+            position={place.google.location}
+            onClick={()=>{
+                map.setZoom(8)
+                map.setCenter(place.geometry.location)
+                //TODO place selector
+            }}
+            onMouseOver={()=>{
+                /*info window is the popup containing contentString*/
+                infoWindow = new window.google.maps.InfoWindow({
+                    content: contentString
+                });
+                infoWindow.open(map,this);//Check this 'this'
+            }}
+            onMouseOut={()=>{
+                if(infoWindow){
+                    infoWindow.close();
+                }
+            }}
+        />);
     }
 
     function doTextSearch(){
-        let service = new google.maps.places.PlacesService(map);
+        let service = new window.google.maps.places.PlacesService(map);
         clearMarkers();
-        service.textSearch(,function(results,status){
-            if(status===google.maps.places.PlacesServiceStatus.OK){
+        service.textSearch(input,function(results,status){
+            if(status===window.google.maps.places.PlacesServiceStatus.OK){
                 //results: a number of places returned by the textSearch. //Would like to drop this number... currently is 20
                 for(var result of results){
                     createMarker(result);
@@ -93,6 +96,14 @@ function MyComponent(){
         });
     }
 
+    /*
+    • createPlaceSlector
+    • addPlaceAsAWaypoint
+    • generateDirections
+    • displayDirections
+    */
+
+    //The actual displays
     return (
         <>
         <LoadScript 
@@ -111,12 +122,17 @@ function MyComponent(){
                 <> 
                 <Marker position={start_position}/>
                 <Marker position={end_position}/>
-                {/* user chosen POI: */}
-                <searchForm/>
-                {markersArray.map(())}
+                {/* user POI interaction: */}
+
+                {/* {markersArray} */}
                 </>
             </GoogleMap>
         </LoadScript>
+        <form onSubmit={doTextSearch}>
+            <label for="pointOfInterest">search for a point of interest</label>
+            <input id='pointOfInterest' type="text" value={input} onInput={e => setInput(e.target.value)}/>
+            <input type="submit" value="Search"/>
+        </form>
         </>
     )
 }

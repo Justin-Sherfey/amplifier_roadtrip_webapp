@@ -3,7 +3,7 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import Trips from './Trips';
-import Waypoints from './Waypoints';
+import WaypointComponent from './Waypoints';
 import NavigationBar from './layout/NavigationBar';
 import PrivateRoute from './routing/PrivateRoute';
 
@@ -13,7 +13,7 @@ export {
     Login,
     Register,
     Trips,
-    Waypoints,
+    WaypointComponent,
     NavigationBar,
     PrivateRoute
 };

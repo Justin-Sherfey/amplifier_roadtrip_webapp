@@ -1,4 +1,4 @@
-import { NavigationBar, Account, Trips, Waypoints, Home, Login, Register, PrivateRoute } from "./components/index";
+import { NavigationBar, Account, Trips, WaypointComponent, Home, Login, Register, PrivateRoute } from "./components/index";
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState, useEffect } from "react";
@@ -6,8 +6,7 @@ import { getUserByToken } from "./services/api/userAPI";
 
 
 function App() {
-  let [authUser, setAuthUser] = useState(undefined);
-  console.log("Rendering App!");
+  const [authUser, setAuthUser] = useState(undefined);
 
   useEffect(() => {
     sessionStorage.getItem('jwt') ? getUserByToken().then(res => {
@@ -28,7 +27,7 @@ function App() {
         <Route path="" element={<PrivateRoute authUser={authUser} />}>
           <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
           <Route path="Trips" element={<Trips authUser={authUser} />} />
-          <Route path="Waypoints" element={<Waypoints />} />
+          <Route path="Waypoints" element={<WaypointComponent />} />
         </Route>
         <Route path="Home" element={<Home />} />
         <Route path="Login" element={<Login setAuthUser={setAuthUser} />} />

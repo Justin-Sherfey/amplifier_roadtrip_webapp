@@ -1,136 +1,174 @@
-import React, { useState, useEffect } from 'react';
 import WaypointService from '../services/api/waypointAPI';
-import TripService from '../services/api/tripAPI';
+import TripService from '../services/api/tripAPI'
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import Modal from 'react-bootstrap4-modal';
 
-function WaypointComponent(props) {
-
+function WaypointComponent() {
     const { register, handleSubmit } = useForm();
-
-    const [waypoints, setWaypoints] = useState([])
-
-
     const navigate = useNavigate();
+    const { state } = useLocation();
+    const [waypoints, setWaypoints] = useState([]);
+    const [waypoint, setWaypoint] = useState([]);
+    const [trip, setTrip] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
 
     useEffect(() => {
-        getWaypoints()
-    }, [])
+        !state ? navigate("/Trips") :
+            WaypointService.getAllWaypoints(state.trip.tripId).then((res) => {
+                if (res.status === 200) {
+                    setTrip(state.trip);
+                    setWaypoints(res.data)
+                }
+            })
+    }, [navigate, state])
 
+    const toggleWaypointEditor = (waypoint) => {
+        setWaypoint(waypoint);
+        setIsOpen(!isOpen);
+    }
 
-    const onSubmit = (formData) => {
+    const renameTrip = (formData) => {
+        //let tempTrip = trip
+        // let tempTrip = {
+        //     "tripName": "Test",
+        //     "tripId": 3,
+        //     "user": { "userId": 1 }
 
-        WaypointService.createWaypoint(formData).then((res) => {
-            if (res.status === 200) {
-                navigate("/Trips");
-                navigate("/Waypoints");
+        // };
+        // //Object.entries(formData).map(([key, value]) => tempTrip[key] = value);
+
+        // console.log(tempTrip);
+        // TripService.editTrip(tempTrip).then((res) => {
+        //     if (res.status === 200) {
+        //         setTrip(res.data);
+        //     }
+        // });
+    }
+
+    const deleteWaypoint = (waypoint) => {
+        WaypointService.deleteWaypoint(waypoint.waypointId).then((response) => {
+            if (response.status === 200) {
+                let tempWaypoints = waypoints.filter(e => { return e !== waypoint; });
+                setWaypoints([...tempWaypoints]);
             }
         });
-
     }
 
-    const rename = (formData) => {
-        let trip = props.trip
-        Object.entries(formData).map(([key, value]) => { trip[key] = value });
-        TripService.editTrip(trip).then((res) => {
+    const editWaypoint = (tempWaypoint) => {
+        tempWaypoint['trip'] = { "tripId": trip.tripId }
+        tempWaypoint['waypointId'] = waypoint.waypointId;
+        WaypointService.editWaypoint(tempWaypoint).then((res) => {
             if (res.status === 200) {
-                props.setTrip(trip);
-                navigate("/Trips");
-                navigate("/Waypoints");
+                let tempWaypoints = waypoints;
+                tempWaypoints[tempWaypoints.findIndex(waypoint => waypoint.waypointId === res.data.waypointId)] = res.data;
+                setWaypoints([...tempWaypoints])
+                toggleWaypointEditor();
             }
         });
     }
 
-    const getWaypoints = () => {
-
-        WaypointService.getAllWaypoints().then((response) => {
-            setWaypoints(response.data)
-            console.log(response.data);
+    const createWaypoint = () => {
+        let newWaypoint = {
+            "waypointName": "New Waypoint",
+            "latitude": 0,
+            "longitude": 0,
+            "trip": trip
+        }
+        WaypointService.createWaypoint(newWaypoint).then((res) => {
+            if (res.status === 200) {
+                let tempWaypoints = waypoints;
+                tempWaypoints.push(res.data);
+                setWaypoints([...tempWaypoints])
+            }
         });
     }
-
-    // probably a less sloppy way to retrieve value later
-    TripService.getTrip().then((response) => {
-        sessionStorage["tripName"] = response.data.tripName;
-    });
 
     return (
         <>
-            <h1>{sessionStorage["tripName"]}</h1>
-
+            <h1 className="text-center">{trip.tripName}</h1>
+            {isOpen && <WaypointEditor toggleWaypointEditor={toggleWaypointEditor} editWaypoint={editWaypoint} waypoint={waypoint} />}
             <div className="container">
-                <h3 className="text-center">Waypoints</h3>
+
+                <h4 className="text-center">Waypoints</h4>
 
                 <table className="table table-striped">
                     <thead>
-                        <th>
-                            <tr>
-                                <th> Waypoint name</th>
-                                <th> Waypoint id</th>
-                                <th> Latitude</th>
-                                <th> Longitude</th>
-                            </tr>
-                        </th>
+                        <tr>
+                            <td> Waypoint name</td>
+                            <td> Action</td>
+                            <td> Waypoint id</td>
+                            <td> Latitude</td>
+                            <td> Longitude</td>
+                        </tr>
                     </thead>
                     <tbody>
-                        {
-                            waypoints.map(
-                                waypoint =>
-                                    <Waypoint key={waypoint.waypointId} waypoint={waypoint} />
-                            )
-                        }
+                        {waypoints.map(waypoint =>
+                            <Waypoint key={waypoint.waypointId} waypoint={waypoint} deleteWaypoint={deleteWaypoint} toggleWaypointEditor={toggleWaypointEditor} />)}
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
+                            </td>
+                            <td />
+                            <td />
+                            <td />
+                            <td />
+                        </tr>
+                    </tfoot>
                 </table>
 
             </div>
-
-            <Form onSubmit={handleSubmit(rename)}>
-                <Form.Label>Edit New Trip name:</Form.Label>
+            <Form onSubmit={handleSubmit(renameTrip)}>
+                <Form.Label>Edit Trip name:</Form.Label>
                 <Form.Control {...register("tripName")}></Form.Control>
                 <Button variant="primary" type="submit"> Rename </Button>
             </Form>
-
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Label>Waypoint Name:</Form.Label>
-                <Form.Control {...register("waypointName")}></Form.Control>
-                <Form.Label>Latitude:</Form.Label>
-                <Form.Control {...register("latitude")}></Form.Control>
-                <Form.Label>Longitude:</Form.Label>
-                <Form.Control {...register("longitude")}></Form.Control>
-                <Button variant="primary" type="submit"> Submit </Button>
-            </Form>
-
         </>
+    )
+}
+
+function WaypointEditor(props) {
+    const { register, handleSubmit } = useForm();
+
+    return (
+        <Modal visible={true} onClickBackdrop={props.toggleWaypointEditor}>
+            <div className="modal-header">
+                {/* <h5 className="modal-title">{props.waypoint.waypointName}</h5> */}
+            </div>
+            <div className="modal-body">
+                <Form onSubmit={handleSubmit(props.editWaypoint)}>
+                    <Form.Label>Waypoint Name:</Form.Label>
+                    <Form.Control {...register("waypointName")}></Form.Control>
+                    <Form.Label>Latitude:</Form.Label>
+                    <Form.Control {...register("latitude")}></Form.Control>
+                    <Form.Label>Longitude:</Form.Label>
+                    <Form.Control {...register("longitude")}></Form.Control>
+                    <br />
+                    <Button variant="primary" type="submit"> Save Changes</Button>
+                    <Button variant="secondary" onClick={props.toggleWaypointEditor}>Cancel</Button>
+                </Form>
+            </div>
+        </Modal>
     )
 }
 
 function Waypoint(props) {
 
-    const navigate = useNavigate();
-
-    const editWaypoint = () => {
-
-    }
-
-    // TODO - figure out how to properly refresh page to update deleted element
-    const deleteWaypoint = () => {
-        WaypointService.deleteWaypoint(props.waypoint.waypointId).then((response) => {
-            if (response.data === true) {
-                navigate("/Trips");
-                navigate("/Waypoints");
-                console.log("deleted");
-            }
-        });
-    }
-
     return (
-        <tr key={props.waypoint.waypointId}>
+        <tr>
             <td>
-                <Button variant="danger" onClick={deleteWaypoint}>Delete Waypoint</Button>
+                {props.waypoint.waypointName}
             </td>
-            <td> {props.waypoint.waypointName}</td>
+            <td>
+                <Button variant="primary" onClick={() => props.toggleWaypointEditor(props.waypoint)}>Edit Waypoint</Button>
+                <Button variant="danger" onClick={() => props.deleteWaypoint(props.waypoint)}>Delete Waypoint</Button>
+            </td>
+            <td> {props.waypoint.waypointId}</td>
             <td> {props.waypoint.latitude}</td>
             <td> {props.waypoint.longitude}</td>
         </tr>

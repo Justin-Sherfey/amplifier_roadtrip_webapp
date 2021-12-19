@@ -1,52 +1,40 @@
-import {
-  NavigationBar,
-  Account,
-  Trips,
-  Waypoints,
-  Home,
-  Login,
-  Register,
-  Logout,
-  PrivateRoute,
-} from "./components/index";
-
+import { NavigationBar, Account, Trips, WaypointComponent, Home, Login, Register, PrivateRoute } from "./components/index";
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUserByToken } from "./services/api/userAPI";
+
 
 import MyComponent from "./services/api/googleAPI"
 
 function App() {
-  let [authUser, setAuthUser] = useState();
-  let [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authUser, setAuthUser] = useState(undefined);
+
+  useEffect(() => {
+    sessionStorage.getItem('jwt') ? getUserByToken().then(res => {
+      if (res.status === 200) {
+        setAuthUser(res.data);
+      } else {
+
+        console.log("Invalid or Bad Login Token!");
+        sessionStorage.clear();
+        setAuthUser(null);
+      }
+    }) : setAuthUser(null);
+  }, []);
 
   return (
     <>
     <Routes>
-      <Route path="/" element={<NavigationBar isLoggedIn={isLoggedIn} />}>
-        <Route path="" element={<PrivateRoute isLoggedIn={isLoggedIn} />}>
-          <Route path="Account" element={<Account authUser={authUser} />} />
-          <Route path="Trips" element={<Trips />} />
-          <Route path="Waypoints" element={<Waypoints />} />
-          <Route
-            path="Logout"
-            element={
-              <Logout setIsLoggedIn={setIsLoggedIn} setAuthUser={setAuthUser} />
-            }
-          />
+      <Route path="/" element={<NavigationBar authUser={authUser} setAuthUser={setAuthUser} />}>
+        <Route path="" element={<PrivateRoute authUser={authUser} />}>
+          <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
+          <Route path="Trips" element={<Trips authUser={authUser} />} />
+          <Route path="Waypoints" element={<WaypointComponent />} />
         </Route>
         <Route path="Home" element={<Home />} />
-        <Route
-          path="Login"
-          element={
-            <Login
-              setIsLoggedIn={setIsLoggedIn}
-              authUser={authUser}
-              setAuthUser={setAuthUser}
-            />
-          }
-        />
-        <Route path="Register" element={<Register />} />
+        <Route path="Login" element={<Login setAuthUser={setAuthUser} />} />
+        <Route path="Register" element={<Register setAuthUser={setAuthUser} />} />
       </Route>
     </Routes>
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import {GoogleMap,Marker, LoadScript, InfoWindow} from '@react-google-maps/api';
 
-//Just testing so far
+const libraries = ['places']
 
 //TODO: make this full page. Height set to 100% doesn't work for some reason
 const containerStyle = {
@@ -107,7 +107,7 @@ function MyComponent(){
     return (
         <>
         <LoadScript 
-        libraries={['places']}
+        libraries={libraries}
         googleMapsApiKey='AIzaSyD9gatdPpn7zvT2lyXrsHhpf7CODG1Q3U0'
         >
             <GoogleMap
@@ -124,12 +124,12 @@ function MyComponent(){
                 <Marker position={end_position}/>
                 {/* user POI interaction: */}
 
-                {/* {markersArray} */}
+                {markersArray.map((marker)=>marker)}
                 </>
             </GoogleMap>
         </LoadScript>
         <form onSubmit={doTextSearch}>
-            <label for="pointOfInterest">search for a point of interest</label>
+            <label htmlFor="pointOfInterest">search for a point of interest</label>
             <input id='pointOfInterest' type="text" value={input} onInput={e => setInput(e.target.value)}/>
             <input type="submit" value="Search"/>
         </form>

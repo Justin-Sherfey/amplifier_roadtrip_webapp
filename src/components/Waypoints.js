@@ -15,7 +15,6 @@ function WaypointComponent() {
     const [trip, setTrip] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
 
-
     useEffect(() => {
         !state ? navigate("/Trips") :
             WaypointService.getAllWaypoints(state.trip.tripId).then((res) => {
@@ -32,21 +31,16 @@ function WaypointComponent() {
     }
 
     const renameTrip = (formData) => {
-        //let tempTrip = trip
-        // let tempTrip = {
-        //     "tripName": "Test",
-        //     "tripId": 3,
-        //     "user": { "userId": 1 }
+        let tempTrip = trip
+        trip["user"] = { "userId": state.authUser.userId }
+        Object.entries(formData).map(([key, value]) => tempTrip[key] = value);
 
-        // };
-        // //Object.entries(formData).map(([key, value]) => tempTrip[key] = value);
-
-        // console.log(tempTrip);
-        // TripService.editTrip(tempTrip).then((res) => {
-        //     if (res.status === 200) {
-        //         setTrip(res.data);
-        //     }
-        // });
+        console.log(tempTrip);
+        TripService.editTrip(tempTrip).then((res) => {
+            if (res.status === 200) {
+                setTrip(res.data);
+            }
+        });
     }
 
     const deleteWaypoint = (waypoint) => {

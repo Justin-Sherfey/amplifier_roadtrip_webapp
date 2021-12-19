@@ -10,7 +10,7 @@ export function Account(props) {
     Object.entries(formData).map(([key, value]) => user[key] = value);
     updateUser(user).then(res => {
       sessionStorage["jwt"] = res.data.jwt;
-      props.setAuthUser(user);
+      props.setAuthUser({ ...user });
     })
   }
 

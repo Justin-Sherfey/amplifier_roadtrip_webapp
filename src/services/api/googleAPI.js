@@ -1,5 +1,6 @@
-import React from 'react'
-import {GoogleMap,Marker, LoadScript, InfoWindow} from '@react-google-maps/api';
+import React, { useState } from 'react'
+
+import {GoogleMap, Marker, LoadScript, StandaloneSearchBox, DirectionsRenderer,DirectionsService} from '@react-google-maps/api';
 
 const libraries = ['places']
 
@@ -24,17 +25,36 @@ const end_position = {
     lng: -118.243
 }
 
+//POI suggestion utils:
+function CreateMarkers(props){
+    // const [isOpen,setIsOpen] = useState(false)
+    const position = {
+        lat: props.marker.geometry.location.lat(),
+        lng: props.marker.geometry.location.lng() 
+    }
+
+    return (
+        <>
+            <Marker position={position}/>
+        </>
+    )
+}
+
 function MyComponent(){
 
     //Local values:
-    //Contains all user selected POI markers
-    var markersArray = [];//could probably also be replaced by a useState
-    //individual info window per marker
-    var infoWindow;
-    //Maintain an instance of user input
-    const [input, setInput] = React.useState('');
-    //Maintain an instance of the map
+    //Maintain given instances
     const [map,setMap] = React.useState(null);
+    const [searchBox, setSearchBox] = useState(undefined)
+    const [markers,setMarkers] = useState([])
+
+    //SearchBox util
+    const onSearchBoxLoad = (ref) => setSearchBox(ref)
+    //triggered when you apply a search
+    const onPlacesChanged = () => {
+        setMarkers(searchBox.getPlaces());
+        map.setCenter(searchBox.getPlaces()[0].geometry.location)
+    }
 
     //Map utils:
     const onLoad = React.useCallback(function callback(map){
@@ -46,57 +66,7 @@ function MyComponent(){
         setMap(null)
     }, [])
 
-    //POI suggestion utils:
-    function clearMarkers(){
-        markersArray = []
-    }
-    function createMarker(place){
-        // if not a valid place then return
-        if(!place.geometry || !place.geometry.location)return;
-
-        // contentString appears above a waypoint on the map when you hover your mouse over it
-        let contentString = place.name + "\n\n" + place.formatted_address;
-        
-        markersArray.push(<Marker
-            position={place.google.location}
-            onClick={()=>{
-                map.setZoom(8)
-                map.setCenter(place.geometry.location)
-                //TODO place selector
-            }}
-            onMouseOver={()=>{
-                /*info window is the popup containing contentString*/
-                infoWindow = new window.google.maps.InfoWindow({
-                    content: contentString
-                });
-                infoWindow.open(map,this);//Check this 'this'
-            }}
-            onMouseOut={()=>{
-                if(infoWindow){
-                    infoWindow.close();
-                }
-            }}
-        />);
-    }
-
-    function doTextSearch(){
-        let service = new window.google.maps.places.PlacesService(map);
-        clearMarkers();
-        service.textSearch(input,function(results,status){
-            if(status===window.google.maps.places.PlacesServiceStatus.OK){
-                //results: a number of places returned by the textSearch. //Would like to drop this number... currently is 20
-                for(var result of results){
-                    createMarker(result);
-                }
-                map.setCenter(results[0].geometry.location);
-                setMap(map);
-            } else {
-                console.log("something went wrong w/ Map textSearch");
-            }
-        });
-    }
-
-    /*
+    /* TODO
     • createPlaceSlector
     • addPlaceAsAWaypoint
     • generateDirections
@@ -120,19 +90,39 @@ function MyComponent(){
             >
                 {/*Child components, such as markers, info windows, etc.: */}
                 <> 
+
+                <StandaloneSearchBox
+                    onLoad={onSearchBoxLoad}
+                    onPlacesChanged={onPlacesChanged}>
+                       <input
+                        type="text"
+                        placeholder="Customized your placeholder"
+                        style={{
+                            boxSizing: `border-box`,
+                            border: `1px solid transparent`,
+                            width: `240px`,
+                            height: `32px`,
+                            padding: `0 12px`,
+                            borderRadius: `3px`,
+                            boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                            fontSize: `14px`,
+                            outline: `none`,
+                            textOverflow: `ellipses`,
+                            position: "absolute",
+                            left: "50%",
+                            marginLeft: "-120px"
+                        }}
+                    />  
+                </StandaloneSearchBox>
+
+                {/* markers */}
                 <Marker position={start_position}/>
                 <Marker position={end_position}/>
+                {markers.map(marker=><CreateMarkers key={marker.reference} marker={marker}/>)}
                 {/* user POI interaction: */}
-
-                {markersArray.map((marker)=>marker)}
                 </>
             </GoogleMap>
         </LoadScript>
-        <form onSubmit={doTextSearch}>
-            <label htmlFor="pointOfInterest">search for a point of interest</label>
-            <input id='pointOfInterest' type="text" value={input} onInput={e => setInput(e.target.value)}/>
-            <input type="submit" value="Search"/>
-        </form>
         </>
     )
 }

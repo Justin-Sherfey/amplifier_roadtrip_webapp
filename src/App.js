@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState, useEffect } from "react";
 import { getUserByToken } from "./api/userAPI";
-import GoogleMaps from "./components/GoogleMaps";
 
 function App() {
   const [authUser, setAuthUser] = useState(undefined);

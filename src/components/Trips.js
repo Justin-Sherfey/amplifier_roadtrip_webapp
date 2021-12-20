@@ -39,38 +39,39 @@ function TripComponent(props) {
     }
 
     return (
-        <>
-            <div className="container">
-                <h1 className="text-center">Trips</h1>
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <td>Trip name</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {trips.map(trip => <Trip key={trip.tripId} editTrip={editTrip} deleteTrip={deleteTrip} trip={trip} />)}
-                    </tbody>
-                </table>
-            </div >
-            <><h3>CREATE A NEW TRIP</h3></>
+        <div className="container">
+            <h1 className="text-center">Trips</h1>
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <td>Trip name</td>
+                        <td>Action</td>
+                        <td>Trip ID</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {trips.map(trip => <Trip key={trip.tripId} editTrip={editTrip} deleteTrip={deleteTrip} trip={trip} />)}
+                </tbody>
+            </table>
+            <h3>CREATE A NEW TRIP</h3>
             <Form onSubmit={handleSubmit(createTrip)}>
                 <Form.Label>Trip Name:</Form.Label>
                 <Form.Control {...register("tripName")}></Form.Control>
+                <br />
                 <Button variant="primary" type="submit"> Submit </Button>
             </Form>
-        </>
+        </div >
     )
 }
 
 function Trip(props) {
     return (
         <tr>
+            <td> {props.trip.tripName}</td>
             <td>
                 <Button variant="primary" onClick={() => props.editTrip(props.trip)}>Edit Trip</Button>
                 <Button variant="danger" onClick={() => props.deleteTrip(props.trip)}>Delete Trip</Button>
             </td>
-            <td> {props.trip.tripName}</td>
             <td> {props.trip.tripId}</td>
         </tr>
     );

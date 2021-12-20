@@ -11,12 +11,11 @@ function App() {
     sessionStorage.getItem('jwt') ? getUserByToken().then(res => {
       if (res.status === 200) {
         setAuthUser(res.data);
-      } else {
-
-        console.log("Invalid or Bad Login Token!");
-        sessionStorage.clear();
-        setAuthUser(null);
       }
+    }).catch(e => {
+      console.log("Invalid or Bad Login Token!");
+      sessionStorage.clear();
+      setAuthUser(null);
     }) : setAuthUser(null);
   }, []);
 

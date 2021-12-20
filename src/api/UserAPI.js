@@ -1,8 +1,7 @@
 import axios from "axios";
 
-// const urlConnection = "http://localhost:5000/"
-const urlConnection =
-  "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
+const urlConnection = "http://localhost:5000/"
+//const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
 
 function getUserByToken() {
   return axios.get(urlConnection + "users", {

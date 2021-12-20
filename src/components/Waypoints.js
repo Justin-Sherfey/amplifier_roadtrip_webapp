@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Container, Row, Col, Table } from "react-bootstrap";
+import { Button, Form, Container, Row, Table } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import TripService from '../api/tripAPI';
@@ -10,8 +10,9 @@ function WaypointComponent() {
     const navigate = useNavigate();
     const { state } = useLocation();
     const [waypoints, setWaypoints] = useState([]);
-    const [selectedWaypoint, setSelectedWaypoint] = useState([]);
+    const [selectedWaypoint, setSelectedWaypoint] = useState();
     const [trip, setTrip] = useState([]);
+    const [toggleMap, setToggleMap] = useState(true);
 
     useEffect(() => {
         !state ? navigate("/Trips") :
@@ -19,6 +20,9 @@ function WaypointComponent() {
                 if (res.status === 200) {
                     setTrip(state.trip);
                     setWaypoints(res.data)
+                    setToggleMap(false);
+                    setToggleMap(true);
+
                 }
             })
     }, [navigate, state])
@@ -35,6 +39,7 @@ function WaypointComponent() {
     const editWaypoint = (tempWaypoint) => {
         tempWaypoint['trip'] = { "tripId": trip.tripId }
         tempWaypoint['waypointId'] = selectedWaypoint.waypointId;
+        console.log(tempWaypoint);
         WaypointService.editWaypoint(tempWaypoint).then((res) => {
             if (res.status === 200) {
                 let tempWaypoints = waypoints;
@@ -46,9 +51,8 @@ function WaypointComponent() {
 
     const createWaypoint = () => {
         let newWaypoint = {
-            "waypointName": "New Waypoint",
-            "latitude": 0,
-            "longitude": 0,
+            "waypointName": "The Gateway Arch",
+            "placeId": "ChIJteVBdWDwwIcRNKiWxoko7Xk",
             "trip": trip
         }
         WaypointService.createWaypoint(newWaypoint).then((res) => {
@@ -71,8 +75,7 @@ function WaypointComponent() {
                             <td> Waypoint name</td>
                             <td> Action</td>
                             <td> Waypoint id</td>
-                            <td> Latitude</td>
-                            <td> Longitude</td>
+                            <td> Place ID</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,17 +85,17 @@ function WaypointComponent() {
                                     setSelectedWaypoint={setSelectedWaypoint} />
 
                             } else {
-                                return <Waypoint key={waypoint.waypointId} waypoint={waypoint} s
-                                    etSelectedWaypoint={setSelectedWaypoint} deleteWaypoint={deleteWaypoint} />
+                                return <Waypoint key={waypoint.waypointId} waypoint={waypoint}
+                                    setSelectedWaypoint={setSelectedWaypoint} deleteWaypoint={deleteWaypoint} />
                             }
                         }
                         )}
                     </tbody>
                 </Table>
-            </Row>
-            <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
+                <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
 
-            <WaypointEditor editWaypoint={editWaypoint} waypoints={waypoints} selectedWaypoint={selectedWaypoint} />
+            </Row>
+            {!!toggleMap && <WaypointEditor waypoints={waypoints} selectedWaypoint={selectedWaypoint} editWaypoint={editWaypoint} />}
         </Container>
     )
 }
@@ -122,17 +125,6 @@ function RenameTrip(props) {
     )
 }
 
-function WaypointEditor(props) {
-    const [place, setPlace] = useState();
-
-    return (
-        <>
-            <GoogleMaps setPlace={setPlace} waypoints={props.waypoints} selectedWaypoint={props.selectedWaypoint} />
-            {!!place && <PlaceInformation place={place} waypoint={props.waypoint} editWaypoint={props.editWaypoint} />}
-        </>
-    )
-}
-
 function Waypoint(props) {
     return (
         <tr>
@@ -144,34 +136,43 @@ function Waypoint(props) {
                 {!!props.deleteWaypoint && <Button variant="danger" onClick={() => props.deleteWaypoint(props.waypoint)}>Delete Waypoint</Button>}
             </td>
             <td> {props.waypoint.waypointId}</td>
-            <td> {props.waypoint.latitude}</td>
-            <td> {props.waypoint.longitude}</td>
+            <td> {props.waypoint.placeId}</td>
         </tr>
     );
 }
 
+function WaypointEditor(props) {
+    const [place, setPlace] = useState();
+
+    return (
+        <>
+            <GoogleMaps setPlace={setPlace} waypoints={props.waypoints} selectedWaypoint={props.selectedWaypoint} />
+            {!!place && <PlaceInformation place={place} waypoint={props.selectedWaypoint} editWaypoint={props.editWaypoint} />}
+        </>
+    )
+}
+
+
 function PlaceInformation(props) {
     const { register, handleSubmit } = useForm();
 
-    const addToTrip = (formData) => {
-
+    const saveTrip = (formData) => {
         let tempWaypoint = props.waypoint;
         Object.entries(formData).map(([key, value]) => tempWaypoint[key] = value);
-        tempWaypoint["latitude"] = props.place.geometry.location.lat();
-        tempWaypoint["longitude"] = props.place.geometry.location.lng();
+        console.log(props.place);
+        tempWaypoint["placeId"] = props.place["place_id"];
         props.editWaypoint(tempWaypoint);
     }
 
     return (
         <Container>
-            <p>Result:</p>
             <h2>{props.place.name}</h2>
             {!!props.place.photos && <img src={props.place.photos[0].getUrl()} alt="Not Found!" width="100%" />}
-            <Form onSubmit={handleSubmit(addToTrip)}>
+            <Form onSubmit={handleSubmit(saveTrip)}>
                 <Form.Label>Waypoint Name:</Form.Label>
                 <Form.Control {...register("waypointName")}></Form.Control>
                 <br />
-                <Button variant="primary" type="submit"> Add to Trip</Button>
+                <Button variant="primary" type="submit">Save Waypoint</Button>
             </Form>
         </Container>
     )

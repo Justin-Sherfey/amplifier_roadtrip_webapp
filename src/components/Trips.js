@@ -22,18 +22,14 @@ function TripComponent(props) {
                 let tempTrips = trips;
                 tempTrips.push(res.data);
                 setTrips([...tempTrips])
-
                 let originWaypoint = {
-                    "waypointName": "New Waypoint",
-                    "latitude": 40.73774326345345,
-                    "longitude": -73.99344767530195,
+                    "waypointName": "Empire State Building",
+                    "placeId": "ChIJtcaxrqlZwokRfwmmibzPsTU",
                     "trip": res.data
                 }
-
                 let destinationWaypoint = {
-                    "waypointName": "New Waypoint",
-                    "latitude": 34.09139749043789,
-                    "longitude": -118.30667633529931,
+                    "waypointName": "Walt Disney Concert Hall",
+                    "placeId": "ChIJ0xG7n03GwoARsDH_OyyMcrM",
                     "trip": res.data
                 }
 

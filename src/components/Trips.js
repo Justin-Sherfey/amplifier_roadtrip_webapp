@@ -3,6 +3,7 @@ import TripService from '../api/tripAPI';
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import WaypointService from '../api/waypointAPI';
 
 function TripComponent(props) {
     const navigate = useNavigate();
@@ -21,9 +22,35 @@ function TripComponent(props) {
                 let tempTrips = trips;
                 tempTrips.push(res.data);
                 setTrips([...tempTrips])
+
+                let originWaypoint = {
+                    "waypointName": "New Waypoint",
+                    "latitude": 40.73774326345345,
+                    "longitude": -73.99344767530195,
+                    "trip": res.data
+                }
+
+                let destinationWaypoint = {
+                    "waypointName": "New Waypoint",
+                    "latitude": 34.09139749043789,
+                    "longitude": -118.30667633529931,
+                    "trip": res.data
+                }
+
+                createWaypoint(originWaypoint);
+                createWaypoint(destinationWaypoint);
             }
         });
     };
+
+    const createWaypoint = (newWaypoint) => {
+        WaypointService.createWaypoint(newWaypoint).then((res) => {
+            if (res.status === 200) {
+
+            }
+        });
+    }
+
 
     const editTrip = (trip) => {
         navigate('/Waypoints', { state: { trip: trip, authUser: props.authUser } });

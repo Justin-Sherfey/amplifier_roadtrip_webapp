@@ -88,9 +88,10 @@ function WaypointComponent() {
                         }
                         )}
                     </tbody>
-                    <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
                 </Table>
             </Row>
+            <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
+
             <WaypointEditor editWaypoint={editWaypoint} waypoints={waypoints} selectedWaypoint={selectedWaypoint} />
         </Container>
     )

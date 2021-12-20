@@ -31,7 +31,7 @@ function Register(props) {
   return (
     <>
       <div className="Register" style={{justifyContent:'center', alignItems:'center'}}>
-
+      <h1 className="text-center">Register</h1>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Form.Group size='lg' controlId="username">
             <Form.Label>Username:</Form.Label>

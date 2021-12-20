@@ -35,6 +35,7 @@ function Login(props) {
     
     <div className="Login" style={{justifyContent:'center', alignItems:'center'}}>
 
+    <h1 className="text-center">Login</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Group size='lg' controlId="username">
           <Form.Label>Username:</Form.Label>

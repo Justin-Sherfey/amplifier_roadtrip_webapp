@@ -1,4 +1,4 @@
-import { updateUser } from "../services/api/userAPI";
+import { updateUser } from "../api/userAPI";
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 export function Account(props) {

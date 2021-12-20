@@ -1,10 +1,12 @@
-import WaypointService from '../services/api/waypointAPI';
-import TripService from '../services/api/tripAPI'
+import WaypointService from '../api/waypointAPI';
+import TripService from '../api/tripAPI'
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import GoogleMaps from './GoogleMaps';
 import Modal from 'react-bootstrap4-modal';
+import Directions from './Directions';
 
 function WaypointComponent() {
     const { register, handleSubmit } = useForm();
@@ -14,6 +16,7 @@ function WaypointComponent() {
     const [waypoint, setWaypoint] = useState([]);
     const [trip, setTrip] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [showDirections, setShowDirections] = useState(false);
 
     useEffect(() => {
         !state ? navigate("/Trips") :
@@ -30,11 +33,14 @@ function WaypointComponent() {
         setIsOpen(!isOpen);
     }
 
+    const toggleShowDirections = () => {
+        setShowDirections(!isOpen);
+    }
+
     const renameTrip = (formData) => {
         let tempTrip = trip
         trip["user"] = { "userId": state.authUser.userId }
         Object.entries(formData).map(([key, value]) => tempTrip[key] = value);
-
         console.log(tempTrip);
         TripService.editTrip(tempTrip).then((res) => {
             if (res.status === 200) {
@@ -59,8 +65,8 @@ function WaypointComponent() {
             if (res.status === 200) {
                 let tempWaypoints = waypoints;
                 tempWaypoints[tempWaypoints.findIndex(waypoint => waypoint.waypointId === res.data.waypointId)] = res.data;
+                setIsOpen(!isOpen);
                 setWaypoints([...tempWaypoints])
-                toggleWaypointEditor();
             }
         });
     }
@@ -85,10 +91,8 @@ function WaypointComponent() {
         <>
             <h1 className="text-center">{trip.tripName}</h1>
             {isOpen && <WaypointEditor toggleWaypointEditor={toggleWaypointEditor} editWaypoint={editWaypoint} waypoint={waypoint} />}
-            <div className="container">
-
+            <div className="container" >
                 <h4 className="text-center">Waypoints</h4>
-
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -107,6 +111,7 @@ function WaypointComponent() {
                         <tr>
                             <td>
                                 <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
+                                <Button variant="primary" onClick={toggleShowDirections}>Get Directions</Button>
                             </td>
                             <td />
                             <td />
@@ -115,7 +120,9 @@ function WaypointComponent() {
                         </tr>
                     </tfoot>
                 </table>
-
+                <div className="text-center">
+                    {showDirections && <Directions />}
+                </div>
             </div>
             <Form onSubmit={handleSubmit(renameTrip)}>
                 <Form.Label>Edit Trip name:</Form.Label>
@@ -127,25 +134,24 @@ function WaypointComponent() {
 }
 
 function WaypointEditor(props) {
-    const { register, handleSubmit } = useForm();
+    const [place, setPlace] = useState();
 
     return (
-        <Modal visible={true} onClickBackdrop={props.toggleWaypointEditor}>
+
+        <Modal fade="true" visible={true} onClickBackdrop={props.toggleWaypointEditor}>
             <div className="modal-header">
-                {/* <h5 className="modal-title">{props.waypoint.waypointName}</h5> */}
+                <h5 className="modal-title">Edit {props.waypoint.waypointName}</h5>
             </div>
             <div className="modal-body">
-                <Form onSubmit={handleSubmit(props.editWaypoint)}>
-                    <Form.Label>Waypoint Name:</Form.Label>
-                    <Form.Control {...register("waypointName")}></Form.Control>
-                    <Form.Label>Latitude:</Form.Label>
-                    <Form.Control {...register("latitude")}></Form.Control>
-                    <Form.Label>Longitude:</Form.Label>
-                    <Form.Control {...register("longitude")}></Form.Control>
-                    <br />
-                    <Button variant="primary" type="submit"> Save Changes</Button>
-                    <Button variant="secondary" onClick={props.toggleWaypointEditor}>Cancel</Button>
-                </Form>
+                <div className="container">
+                    <div className="row">
+                        <p>Search for a location:</p>
+                        <GoogleMaps setPlace={setPlace} waypoint={props.waypoint} />
+                    </div>
+                    <div className="row">
+                        {!!place && <PlaceInformation place={place} waypoint={props.waypoint} editWaypoint={props.editWaypoint} />}
+                    </div>
+                </div>
             </div>
         </Modal>
     )
@@ -167,6 +173,36 @@ function Waypoint(props) {
             <td> {props.waypoint.longitude}</td>
         </tr>
     );
+}
+
+function PlaceInformation(props) {
+    const { register, handleSubmit } = useForm();
+
+    const addToTrip = (formData) => {
+
+        let tempWaypoint = props.waypoint;
+        Object.entries(formData).map(([key, value]) => tempWaypoint[key] = value);
+        tempWaypoint["latitude"] = props.place.geometry.location.lat();
+        tempWaypoint["longitude"] = props.place.geometry.location.lng();
+        props.editWaypoint(tempWaypoint);
+    }
+    console.log(props)
+
+    return (
+        <>
+            <div className="container p-3 my-3 bg-dark text-white">
+                <p>Result:</p>
+                <h2>{props.place.name}</h2>
+                {!!props.place.photos && <img src={props.place.photos[0].getUrl()} alt="Not Found!" width="100%" />}
+            </div>
+            <Form onSubmit={handleSubmit(addToTrip)}>
+                <Form.Label>Waypoint Name:</Form.Label>
+                <Form.Control {...register("waypointName")}></Form.Control>
+                <br />
+                <Button variant="primary" type="submit"> Add to Trip</Button>
+            </Form>
+        </>
+    )
 }
 
 export default WaypointComponent

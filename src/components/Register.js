@@ -1,4 +1,4 @@
-import { registerUser, getUserByToken } from "../services/api/userAPI";
+import { registerUser, getUserByToken } from "../api/userAPI";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";

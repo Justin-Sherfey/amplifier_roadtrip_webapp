@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TripService from '../services/api/tripAPI';
+import TripService from '../api/tripAPI';
 import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";

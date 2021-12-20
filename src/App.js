@@ -2,10 +2,8 @@ import { NavigationBar, Account, Trips, WaypointComponent, Home, Login, Register
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState, useEffect } from "react";
-import { getUserByToken } from "./services/api/userAPI";
-
-
-import MyComponent from "./services/api/googleAPI"
+import { getUserByToken } from "./api/userAPI";
+import GoogleMaps from "./components/GoogleMaps";
 
 function App() {
   const [authUser, setAuthUser] = useState(undefined);
@@ -25,20 +23,18 @@ function App() {
 
   return (
     <>
-    <Routes>
-      <Route path="/" element={<NavigationBar authUser={authUser} setAuthUser={setAuthUser} />}>
-        <Route path="" element={<PrivateRoute authUser={authUser} />}>
-          <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
-          <Route path="Trips" element={<Trips authUser={authUser} />} />
-          <Route path="Waypoints" element={<WaypointComponent />} />
+      <Routes>
+        <Route path="/" element={<NavigationBar authUser={authUser} setAuthUser={setAuthUser} />}>
+          <Route path="" element={<PrivateRoute authUser={authUser} />}>
+            <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
+            <Route path="Trips" element={<Trips authUser={authUser} />} />
+            <Route path="Waypoints" element={<WaypointComponent />} />
+          </Route>
+          <Route path="Home" element={<Home />} />
+          <Route path="Login" element={<Login setAuthUser={setAuthUser} />} />
+          <Route path="Register" element={<Register setAuthUser={setAuthUser} />} />
         </Route>
-        <Route path="Home" element={<Home />} />
-        <Route path="Login" element={<Login setAuthUser={setAuthUser} />} />
-        <Route path="Register" element={<Register setAuthUser={setAuthUser} />} />
-      </Route>
-    </Routes>
-
-    <MyComponent/>
+      </Routes>
     </>
   );
 }

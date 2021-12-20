@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//const urlConnection = "http://localhost:5000/"
-const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
+const urlConnection = "http://localhost:5000/"
+//const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
 
 const TRIPS_REST_API_URL_CREATE_UPDATE = urlConnection + 'trips';
 const TRIPS_REST_API_URL_READ_ALL = urlConnection + 'trips/getAll/';

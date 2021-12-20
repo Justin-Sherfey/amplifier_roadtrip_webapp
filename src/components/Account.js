@@ -16,7 +16,7 @@ export function Account(props) {
 
   return (
     <>
-      <h1>Account:</h1>
+      <h1 className="text-center">Account:</h1>
       <p>Username: {props.authUser.username}</p>
       <p>UserID: {props.authUser.userId}</p>
       <Form onSubmit={handleSubmit(onSubmit)}>

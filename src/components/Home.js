@@ -1,8 +1,8 @@
 export function Home() {
   return (
     <>
-      <h1>Home</h1>
-      <h2>Welcome to Amplifire Roadtrip!</h2>
+      <h1 className="text-center">Home</h1>
+      <h2 className="text-center">Welcome to Amplifire Roadtrip!</h2>
     </>
   );
 }

@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const urlConnection = "http://localhost:5000/"
-//const urlConnection = "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
+// const urlConnection = "http://localhost:5000/"
+const urlConnection =
+  "http://amplifireroadtripbeanstalk-env.eba-amdewhu5.us-west-2.elasticbeanstalk.com/";
 
 function getUserByToken() {
   return axios.get(urlConnection + "users", {
     headers: {
-      'Authorization': 'Bearer ' + sessionStorage.getItem("jwt"),
+      Authorization: "Bearer " + sessionStorage.getItem("jwt"),
     },
   });
 }
@@ -22,7 +23,7 @@ function getTokenFromUser(user) {
 function updateUser(user) {
   return axios.put(urlConnection + "users", JSON.stringify(user), {
     headers: {
-      'Authorization': 'Bearer ' + sessionStorage.getItem("jwt"),
+      Authorization: "Bearer " + sessionStorage.getItem("jwt"),
       "Content-Type": "application/json",
     },
   });

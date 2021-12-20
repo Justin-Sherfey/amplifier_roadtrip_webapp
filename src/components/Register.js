@@ -3,6 +3,9 @@ import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
+import "./style/Register.css"
+
+
 function Register(props) {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
@@ -28,7 +31,9 @@ function Register(props) {
 
   return (
     <>
-      <h1>Register:</h1>
+          <div className="Register" style={{justifyContent:'center', alignItems:'center'}}>
+
+      <h1 className="text-center">Register:</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Label>Username:</Form.Label>
         <Form.Control {...register("username")}></Form.Control>
@@ -38,6 +43,8 @@ function Register(props) {
           Submit
         </Button>
       </Form>
+      </div>
+
     </>
   );
 }

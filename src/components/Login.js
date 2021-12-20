@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getTokenFromUser, getUserByToken } from "../api/userAPI";
 
+import "./style/Login.css";
+
 function Login(props) {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
@@ -29,7 +31,9 @@ function Login(props) {
 
   return (
     <>
-      <h1>Login:</h1>
+        <div className="Login" style={{justifyContent:'center', alignItems:'center'}}>
+
+      <h1 className="text-center">Login:</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Label>Username:</Form.Label>
         <Form.Control {...register("username")}></Form.Control>
@@ -39,6 +43,8 @@ function Login(props) {
           Submit
         </Button>
       </Form>
+      </div>
+
     </>
   );
 }

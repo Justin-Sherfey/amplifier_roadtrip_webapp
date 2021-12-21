@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import TripService from '../api/tripAPI';
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import WaypointService from '../api/waypointAPI';
 import myTrips from "../assets/imgs/myTrips.png";
+import newTrip from "../assets/imgs/newTrip.png";
 
 function TripComponent(props) {
     const navigate = useNavigate();
@@ -63,32 +64,45 @@ function TripComponent(props) {
     }
 
     return (
-        <div className="container">
+        <Container className="text-center">
             <img src={myTrips} height="100px" />
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <td>Trip name</td>
-                        <td>Action</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {trips.map(trip => <Trip key={trip.tripId} editTrip={editTrip} deleteTrip={deleteTrip} trip={trip} />)}
-                </tbody>
-            </table>
-            <div className="Register" >
-                <div className="text-md-left">
-                    <Form onSubmit={handleSubmit(createTrip)}>
-                        <h3>CREATE A NEW TRIP</h3>
 
-                        <Form.Label>Trip Name:</Form.Label>
-                        <Form.Control {...register("tripName")}></Form.Control>
+            <Row>
+                <Col></Col>
+
+                <Col>
+
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <td>Trip name</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {trips.map(trip => <Trip key={trip.tripId} editTrip={editTrip} deleteTrip={deleteTrip} trip={trip} />)}
+                        </tbody>
+                    </table>
+                </Col>
+                <Col></Col>
+            </Row>
+
+            <Row>
+                <Col></Col>
+
+                <Col>
+                    <Form onSubmit={handleSubmit(createTrip)}>
+                        <img src={newTrip} height="50px" />
+                        <br />
+                        <Form.Control placeHolder="Trip Name" {...register("tripName")}></Form.Control>
                         <br />
                         <Button variant="primary" type="submit"> Submit </Button>
                     </Form>
-                </div>
-            </div>
-        </div >
+                </Col>
+                <Col></Col>
+            </Row>
+
+        </Container>
     )
 }
 

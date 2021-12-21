@@ -76,13 +76,18 @@ function TripComponent(props) {
                     {trips.map(trip => <Trip key={trip.tripId} editTrip={editTrip} deleteTrip={deleteTrip} trip={trip} />)}
                 </tbody>
             </table>
-            <h3>CREATE A NEW TRIP</h3>
-            <Form onSubmit={handleSubmit(createTrip)}>
-                <Form.Label>Trip Name:</Form.Label>
-                <Form.Control {...register("tripName")}></Form.Control>
-                <br />
-                <Button variant="primary" type="submit"> Submit </Button>
-            </Form>
+            <div className="Register" >
+                <div className="text-md-left">
+                    <Form onSubmit={handleSubmit(createTrip)}>
+                        <h3>CREATE A NEW TRIP</h3>
+
+                        <Form.Label>Trip Name:</Form.Label>
+                        <Form.Control {...register("tripName")}></Form.Control>
+                        <br />
+                        <Button variant="primary" type="submit"> Submit </Button>
+                    </Form>
+                </div>
+            </div>
         </div >
     )
 }

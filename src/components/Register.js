@@ -40,7 +40,7 @@ function Register(props) {
           <img src={readyToRide} height="130px" />
         </div>
         <div className="text-center">
-          <a href={"/Login"}>
+          <a onClick={redirectToLogin}>
             <img src={oldUser} height="40px" />
           </a>
         </div>

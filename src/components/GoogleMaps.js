@@ -18,12 +18,10 @@ function GoogleMaps(props) {
     const [travelMode, setTravelMode] = useState(props.travelMode);
     const [locations, setLocations] = useState();
 
-    console.log("test")
     const onLoad = (ref) => setSearchBox(ref);
 
     const directionsCallback = (response) => {
 
-        console.log(response);
         toggleOffDirections();
         setMarkers([])
         if (response !== null && response.status === 'OK') {

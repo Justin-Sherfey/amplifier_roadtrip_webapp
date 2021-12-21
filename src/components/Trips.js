@@ -94,9 +94,9 @@ function TripComponent(props) {
                     <Form onSubmit={handleSubmit(createTrip)}>
                         <img src={newTrip} height="50px" />
                         <br />
-                        <Form.Control placeHolder="Trip Name" {...register("tripName")}></Form.Control>
+                        <Form.Control placeholder="Trip Name" {...register("tripName")}></Form.Control>
                         <br />
-                        <Button variant="primary" type="submit"> Submit </Button>
+                        <Button variant="dark" type="submit"> Submit </Button>
                     </Form>
                 </Col>
                 <Col></Col>
@@ -111,8 +111,8 @@ function Trip(props) {
         <tr>
             <td> {props.trip.tripName}</td>
             <td>
-                <Button variant="primary" onClick={() => props.editTrip(props.trip)}>Edit Trip</Button>
-                <Button variant="danger" onClick={() => props.deleteTrip(props.trip)}>Delete Trip</Button>
+                <Button variant="dark" onClick={() => props.editTrip(props.trip)}>Edit</Button>
+                <Button variant="danger" onClick={() => props.deleteTrip(props.trip)}>Delete</Button>
             </td>
         </tr>
     );

@@ -24,6 +24,7 @@ function GoogleMaps(props) {
         //props.setDirections(response);
         toggleOffDirections();
         setMarkers([])
+        console.log(response);
         if (response !== null && response.status === 'OK') {
             setResponse(response)
         }
@@ -49,7 +50,7 @@ function GoogleMaps(props) {
                         "lng": res.geometry.location.lng()
                     });
 
-                    props.setPlace(res[0]);
+                    props.setPlace(res);
                 } else {
                     console.log("Unable to query for a place. The selected waypoint likely has a bad Lat/Lng")
                 }
@@ -57,8 +58,6 @@ function GoogleMaps(props) {
         };
 
     }, [props.selectedWaypoint, service])
-
-
 
     const onMapLoad = (map) => {
         let service = new window.google.maps.places.PlacesService(map);

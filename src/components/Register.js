@@ -30,7 +30,7 @@ function Register(props) {
     });
   }
   const redirectToLogin = () => {
-    navigate("/Register")
+    navigate("/Login")
   }
 
   return (

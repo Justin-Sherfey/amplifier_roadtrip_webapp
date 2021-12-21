@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import TripService from '../api/tripAPI';
 import WaypointService from '../api/waypointAPI';
 import GoogleMaps from './GoogleMaps';
+import tripPlan from "../assets/imgs/tripPlan.png";
+
 
 function WaypointComponent() {
     const navigate = useNavigate();
@@ -70,35 +72,35 @@ function WaypointComponent() {
     }
 
     return (
-        <Container>
+        <Container >
+            <div className="text-center">
+                <img src={tripPlan} height="100px" />
+            </div>
             <Row>
-                <h1 className="text-center">{trip.tripName}</h1>
-                <h4 className="text-center">Waypoints</h4>
-                <Table striped bordered hover>
-                    <thead>
-                        <tr>
-                            <td> Waypoint name</td>
-                            <td> Action</td>
-                            <td> Waypoint id</td>
-                            <td> Place ID</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {waypoints.map(waypoint => {
-                            if (waypoints[0] === waypoint || waypoints[waypoints.length - 1] === waypoint) {
-                                return <Waypoint key={waypoint.waypointId} waypoint={waypoint}
-                                    setSelectedWaypoint={setSelectedWaypoint} />
+                <Col>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <td> Waypoint name</td>
+                                <td> Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {waypoints.map(waypoint => {
+                                if (waypoints[0] === waypoint || waypoints[waypoints.length - 1] === waypoint) {
+                                    return <Waypoint key={waypoint.waypointId} waypoint={waypoint}
+                                        setSelectedWaypoint={setSelectedWaypoint} />
 
-                            } else {
-                                return <Waypoint key={waypoint.waypointId} waypoint={waypoint}
-                                    setSelectedWaypoint={setSelectedWaypoint} deleteWaypoint={deleteWaypoint} />
+                                } else {
+                                    return <Waypoint key={waypoint.waypointId} waypoint={waypoint}
+                                        setSelectedWaypoint={setSelectedWaypoint} deleteWaypoint={deleteWaypoint} />
+                                }
                             }
-                        }
-                        )}
-                    </tbody>
-                </Table>
-                <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
-
+                            )}
+                        </tbody>
+                    </Table>
+                    <Button variant="dark" onClick={createWaypoint}>Create Waypoint</Button>
+                </Col>
             </Row>
             <br />
             <Row>
@@ -143,11 +145,10 @@ function Waypoint(props) {
                 {props.waypoint.waypointName}
             </td>
             <td>
-                <Button variant="primary" onClick={() => props.setSelectedWaypoint(props.waypoint)}>Edit Waypoint</Button>
-                {!!props.deleteWaypoint && <Button variant="danger" onClick={() => props.deleteWaypoint(props.waypoint)}>Delete Waypoint</Button>}
+                <Button variant="dark" onClick={() => props.setSelectedWaypoint(props.waypoint)}>Edit</Button>
+                {!!props.deleteWaypoint && <Button variant="danger" onClick={() => props.deleteWaypoint(props.waypoint)}>Delete</Button>}
             </td>
-            <td> {props.waypoint.waypointId}</td>
-            <td> {props.waypoint.placeId}</td>
+
         </tr>
     );
 }
@@ -201,11 +202,13 @@ function PlaceInformation(props) {
 
     return (
         <Container>
+            <h1>{props.waypoint.waypointName}</h1>
+            <hr />
             <h2>{props.place.name}</h2>
             {!!props.place.photos && <img src={props.place.photos[0].getUrl()} alt="Not Found!" width="100%" />}
             <Form onSubmit={handleSubmit(saveTrip)}>
                 <Form.Label>Waypoint Name:</Form.Label>
-                <Form.Control {...register("waypointName")}></Form.Control>
+                <Form.Control placeholder="Trip Name" {...register("waypointName")}></Form.Control>
                 <br />
                 <Button variant="primary" type="submit">Save Waypoint</Button>
             </Form>

@@ -30,16 +30,20 @@ function Login(props) {
     });
   }
 
+  const redirectToLogin = () => {
+    navigate("/Register")
+  }
+
   return (
 
     <>
 
       <div className="Login" >
         <div className="text-center">
-          <img src={onTheRoad} height="100px" />
+          <img src={onTheRoad} height="130px" />
         </div>
         <div className="text-center">
-          <a href="/Register">
+          <a onClick={redirectToLogin}>
             <img src={newUser} height="40px" />
           </a>
         </div>

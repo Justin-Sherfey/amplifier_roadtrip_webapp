@@ -3,8 +3,16 @@ import newAdventure from "../assets/imgs/newAdventure.png";
 import car from "../assets/videos/cars.mp4";
 import { Container, Row } from "react-bootstrap";
 import "../assets/css/buttons.css";
+import { useNavigate } from "react-router-dom";
+
 
 export function Home() {
+  let navigate = useNavigate();
+
+  const redirectToRegister = () => {
+    navigate("/Register")
+  }
+
   return (
     <Container className="text-center">
       <video autoPlay muted loop id="myVideo">
@@ -16,7 +24,7 @@ export function Home() {
           <img src={homeWelcome} height="300px" />
           <br />
           <br />
-          <a href={"/register"}>
+          <a onClick={redirectToRegister}>
             <img className="zoom" src={newAdventure} height="70px" />
           </a>
         </div>

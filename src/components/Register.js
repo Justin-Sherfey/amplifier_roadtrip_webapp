@@ -29,6 +29,9 @@ function Register(props) {
       navigate("/Home");
     });
   }
+  const redirectToLogin = () => {
+    navigate("/Register")
+  }
 
   return (
     <>
@@ -37,7 +40,7 @@ function Register(props) {
           <img src={readyToRide} height="130px" />
         </div>
         <div className="text-center">
-          <a href="/Login">
+          <a href={"/Login"}>
             <img src={oldUser} height="40px" />
           </a>
         </div>

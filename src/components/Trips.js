@@ -4,6 +4,7 @@ import { Form, Button } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import WaypointService from '../api/waypointAPI';
+import myTrips from "../assets/imgs/myTrips.png";
 
 function TripComponent(props) {
     const navigate = useNavigate();
@@ -63,8 +64,14 @@ function TripComponent(props) {
 
     return (
         <div className="container">
-            <h1 className="text-center">Trips</h1>
-            <table >
+            <img src={myTrips} height="100px" />
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <td>Trip name</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
                 <tbody>
                     {trips.map(trip => <Trip key={trip.tripId} editTrip={editTrip} deleteTrip={deleteTrip} trip={trip} />)}
                 </tbody>

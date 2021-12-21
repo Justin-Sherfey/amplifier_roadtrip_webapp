@@ -64,14 +64,7 @@ function TripComponent(props) {
     return (
         <div className="container">
             <h1 className="text-center">Trips</h1>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <td>Trip name</td>
-                        <td>Action</td>
-                        <td>Trip ID</td>
-                    </tr>
-                </thead>
+            <table >
                 <tbody>
                     {trips.map(trip => <Trip key={trip.tripId} editTrip={editTrip} deleteTrip={deleteTrip} trip={trip} />)}
                 </tbody>
@@ -95,7 +88,6 @@ function Trip(props) {
                 <Button variant="primary" onClick={() => props.editTrip(props.trip)}>Edit Trip</Button>
                 <Button variant="danger" onClick={() => props.deleteTrip(props.trip)}>Delete Trip</Button>
             </td>
-            <td> {props.trip.tripId}</td>
         </tr>
     );
 }

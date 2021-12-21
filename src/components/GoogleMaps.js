@@ -21,7 +21,7 @@ function GoogleMaps(props) {
     const onLoad = (ref) => setSearchBox(ref);
 
     const directionsCallback = (response) => {
-
+        //props.setDirections(response);
         toggleOffDirections();
         setMarkers([])
         if (response !== null && response.status === 'OK') {

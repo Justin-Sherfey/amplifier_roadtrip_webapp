@@ -1,0 +1,29 @@
+.zoom {
+    transition: all .2s ease-in-out;
+}
+
+.zoom:hover {
+    height: 90px;
+}
+
+/* Style the video: 100% width and height to cover the entire window */
+#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* Add some content at the bottom of the video/page */
+.overlay {
+    transition: all .5s ease-in-out;
+    position: fixed;
+    padding-top: 40px;
+    bottom: 0;
+    top: 70px;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+    width: 100%;
+}

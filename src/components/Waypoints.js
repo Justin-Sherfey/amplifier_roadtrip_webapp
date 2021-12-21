@@ -13,16 +13,15 @@ function WaypointComponent() {
     const [selectedWaypoint, setSelectedWaypoint] = useState();
     const [trip, setTrip] = useState([]);
     const [toggleMap, setToggleMap] = useState(false);
+    const [directions, setDirections] = useState();
+
 
     useEffect(() => {
-
         !state ? navigate("/Trips") :
             WaypointService.getAllWaypoints(state.trip.tripId).then((res) => {
                 if (res.status === 200) {
                     setTrip(state.trip);
                     setWaypoints(res.data)
-            
-
                 }
             })
     }, [navigate, state])

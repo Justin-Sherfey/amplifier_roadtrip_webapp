@@ -2,7 +2,8 @@ import { registerUser, getUserByToken } from "../api/userAPI";
 import { useForm } from "react-hook-form";
 import { Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
+import readyToRide from "../assets/imgs/readyToRide.png";
+import oldUser from "../assets/imgs/oldUser.png";
 import "./style/Register.css"
 
 
@@ -31,18 +32,28 @@ function Register(props) {
 
   return (
     <>
-              <div className="Register" style={{justifyContent:'center', alignItems:'center'}}>
+      <div className="Register">
+        <div className="text-center">
+          <img src={readyToRide} height="130px" />
+        </div>
+        <div className="text-center">
+          <a href="/Login">
+            <img src={oldUser} height="40px" />
+          </a>
+        </div>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form.Label>Username:</Form.Label>
+          <Form.Control {...register("username")}></Form.Control>
+          <Form.Label>Password:</Form.Label>
+          <Form.Control {...register("password")}></Form.Control>
 
-      <h1 className="text-center">Register</h1>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Form.Label>Username:</Form.Label>
-        <Form.Control {...register("username")}></Form.Control>
-        <Form.Label>Password:</Form.Label>
-        <Form.Control {...register("password")}></Form.Control>
-        <Button variant="primary" type="submit">
-          Register
-        </Button>
-      </Form>
+          <br />
+          <div className="text-center">
+            <Button variant="dark" type="submit">
+              Register
+            </Button>
+          </div>
+        </Form>
       </div>
 
     </>

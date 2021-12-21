@@ -2,7 +2,8 @@ import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { getTokenFromUser, getUserByToken } from "../api/userAPI";
-
+import onTheRoad from "../assets/imgs/onTheRoad.png";
+import newUser from "../assets/imgs/newUser.png";
 import "./style/Login.css";
 
 function Login(props) {
@@ -30,28 +31,39 @@ function Login(props) {
   }
 
   return (
-    
-    <>
-    
-    <div className="Login" style={{justifyContent:'center', alignItems:'center'}}>
 
-    <h1 className="text-center">Login</h1>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Form.Group size='lg' controlId="username">
-          <Form.Label>Username:</Form.Label>
-          <Form.Control {...register("username")}></Form.Control>
-        </Form.Group>
-        
-        <Form.Group size='lg' controlId="password">
-          <Form.Label>Password:</Form.Label>
-          <Form.Control {...register("password")}></Form.Control>
-        </Form.Group>
-        
-        <Button variant="primary" type="submit">
-          Login
-        </Button>
-      </Form>
-    </div>
+    <>
+
+      <div className="Login" >
+        <div className="text-center">
+          <img src={onTheRoad} height="100px" />
+        </div>
+        <div className="text-center">
+          <a href="/Register">
+            <img src={newUser} height="40px" />
+          </a>
+        </div>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form.Group size='lg' controlId="username">
+            <Form.Label>Username:</Form.Label>
+            <Form.Control {...register("username")}></Form.Control>
+          </Form.Group>
+
+          <Form.Group size='lg' controlId="password">
+            <Form.Label>Password:</Form.Label>
+            <Form.Control {...register("password")}></Form.Control>
+          </Form.Group>
+
+          <br />
+
+          <div className="text-center">
+            <Button variant="dark" type="submit">
+              Login
+            </Button>
+          </div>
+
+        </Form>
+      </div>
     </>
   );
 }

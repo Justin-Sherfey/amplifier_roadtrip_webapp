@@ -1,6 +1,9 @@
 import { updateUser } from "../api/userAPI";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Container } from "react-bootstrap";
 import { useForm } from "react-hook-form";
+import accountInfo from "../assets/imgs/accountInfo.png";
+
+
 export function Account(props) {
   const { register, handleSubmit } = useForm();
 
@@ -15,20 +18,25 @@ export function Account(props) {
   }
 
   return (
-    <>
-      <h1 className="text-center">Account:</h1>
-      <p>Username: {props.authUser.username}</p>
-      <p>UserID: {props.authUser.userId}</p>
+    <Container className="text-center" className="Register">
+      <div className="text-center">
+        <img src={accountInfo} height="80px" />
+      </div>
+      <br />
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Label>Username:</Form.Label>
         <Form.Control {...register("username")}></Form.Control>
         <Form.Label>Password:</Form.Label>
         <Form.Control {...register("password")}></Form.Control>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
+        <br />
+        <div className="text-center">
+
+          <Button variant="dark" type="submit">
+            Submit
+          </Button>
+        </div>
       </Form>
-    </>
+    </Container>
   );
 }
 

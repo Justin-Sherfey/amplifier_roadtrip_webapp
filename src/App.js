@@ -1,4 +1,4 @@
-import { NavigationBar, Account, Trips, WaypointComponent, Home, Login, Register, PrivateRoute } from "./components/index";
+import { NavigationBar, Account, Footer, Trips, WaypointComponent, Home, Login, Register, PrivateRoute } from "./components/index";
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import { useState, useEffect } from "react";
@@ -21,18 +21,25 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route path="/" element={<NavigationBar authUser={authUser} setAuthUser={setAuthUser} />}>
-          <Route path="" element={<PrivateRoute authUser={authUser} />}>
-            <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
-            <Route path="Trips" element={<Trips authUser={authUser} />} />
-            <Route path="Waypoints" element={<WaypointComponent />} />
-          </Route>
-          <Route path="Home" element={<Home />} />
-          <Route path="Login" element={<Login setAuthUser={setAuthUser} />} />
-          <Route path="Register" element={<Register setAuthUser={setAuthUser} />} />
-        </Route>
-      </Routes>
+      <div className="app">
+        <div className="content">
+          <Routes >
+            <Route path="/" element={<NavigationBar authUser={authUser} setAuthUser={setAuthUser} />}>
+              <Route path="" element={<PrivateRoute authUser={authUser} />}>
+                <Route path="Account" element={<Account authUser={authUser} setAuthUser={setAuthUser} />} />
+                <Route path="Trips" element={<Trips authUser={authUser} />} />
+                <Route path="Waypoints" element={<WaypointComponent />} />
+              </Route>
+              <Route path="Home" element={<Home />} />
+              <Route path="Login" element={<Login setAuthUser={setAuthUser} />} />
+              <Route path="Register" element={<Register setAuthUser={setAuthUser} />} />
+            </Route>
+          </Routes>
+        </div>
+        <div className="footer">
+          <Footer />
+        </div>
+      </div>
     </>
   );
 }

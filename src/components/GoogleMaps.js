@@ -1,7 +1,6 @@
 import React from 'react'
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 import { useState, useEffect } from 'react';
-import { Dropdown, Button, Col, Row } from 'react-bootstrap';
 
 const libraries = ['places']
 const apiKey = "AIzaSyD9gatdPpn7zvT2lyXrsHhpf7CODG1Q3U0";
@@ -10,17 +9,19 @@ function GoogleMaps(props) {
 
     const [searchBox, setSearchBox] = useState(undefined);
     const [markers, setMarkers] = useState([]);
-    const [travelMode, setTravelMode] = useState("DRIVING");
     const [response, setResponse] = useState();
     const [center, setCenter] = useState();
     const [origin, setOrigin] = useState();
     const [toggleDirections, setToggleDirections] = useState(false);
     const [destination, setDestination] = useState();
     const [service, setService] = useState();
-    const changeTravelMode = (mode) => setTravelMode(mode)
+    const [travelMode, setTravelMode] = useState(props.travelMode);
+    const [locations, setLocations] = useState();
+
     const onLoad = (ref) => setSearchBox(ref);
 
     const directionsCallback = (response) => {
+
         toggleOffDirections();
         setMarkers([])
         if (response !== null && response.status === 'OK') {
@@ -33,7 +34,6 @@ function GoogleMaps(props) {
         if (!props.selectedWaypoint || !service) {
             toggleOnDirections();
         } else {
-
             let request = { placeId: props.selectedWaypoint.placeId, fields: ["name", "geometry", "photos", "formatted_address"] };
 
             service.getDetails(request, (res, status) => {
@@ -58,19 +58,39 @@ function GoogleMaps(props) {
 
     }, [props.selectedWaypoint, service])
 
-    const onMapLoad = (map) => {
 
+
+    const onMapLoad = (map) => {
+        let service = new window.google.maps.places.PlacesService(map);
+
+        setService(new window.google.maps.places.PlacesService(map));
         if (props.waypoints.length > 1) {
+
+            let waypoints = [];
+            for (let i = 1; i < props.waypoints.length - 1; i++) {
+
+                let request = { placeId: props.waypoints[i].placeId, fields: ["geometry"] };
+
+                service.getDetails(request, (res, status) => {
+                    if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                        waypoints.push({
+                            location: {
+                                "lat": res.geometry.location.lat(),
+                                "lng": res.geometry.location.lng()
+                            }
+                        })
+                    } else { }
+                });
+
+            }
+            setLocations(waypoints);
 
             let reqOrigin = { placeId: props.waypoints[0].placeId, fields: ["geometry"] };
             let reqDestination = { placeId: props.waypoints[props.waypoints.length - 1].placeId, fields: ["geometry"] };
 
-            setService(new window.google.maps.places.PlacesService(map));
 
-            let service = new window.google.maps.places.PlacesService(map);
             service.getDetails(reqOrigin, (res, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                    console.log(res);
 
                     const startingPoint = {
                         "lat": res.geometry.location.lat(),
@@ -120,82 +140,61 @@ function GoogleMaps(props) {
     }
 
     const mapContainerStyle = {
-        height: "400px",
-        width: "700px"
+        height: "600px",
+        width: "600px"
     };
 
     return (
         <>
-            <Row >
-                <LoadScript libraries={libraries} googleMapsApiKey={apiKey}>
-                    <GoogleMap
-                        id="searchbox-example"
-                        mapContainerStyle={mapContainerStyle}
-                        zoom={7}
-                        center={center}
-                        onLoad={onMapLoad}
-                    >
-                        {markers.map(marker => <CreateMarkers key={marker.geometry.location.lat()} marker={marker} setPlace={props.setPlace} />)}
+            <LoadScript libraries={libraries} googleMapsApiKey={apiKey}>
+                <GoogleMap
+                    id="searchbox-example"
+                    mapContainerStyle={mapContainerStyle}
+                    zoom={7}
+                    center={center}
+                    onLoad={onMapLoad}
+                >
+                    {markers.map(marker => <CreateMarkers key={marker.geometry.location.lat()} marker={marker} setPlace={props.setPlace} />)}
 
-                        {(!!destination && !!origin && !!center && toggleDirections === true) && <DirectionsService
-                            options={{
-                                destination: destination,
-                                origin: origin,
-                                travelMode: travelMode
+                    {(!!destination && !!origin && !!center && toggleDirections === true) && <DirectionsService
+                        options={{
+                            destination: destination,
+                            origin: origin,
+                            travelMode: travelMode,
+                            waypoints: locations
+                        }}
+
+                        callback={directionsCallback}
+                    />}
+
+                    {(!!response) && (<DirectionsRenderer options={{ directions: response }} />)}
+
+                    <StandaloneSearchBox
+                        onLoad={onLoad}
+                        onPlacesChanged={onPlacesChanged}>
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            style={{
+                                boxSizing: `border-box`,
+                                border: `1px solid transparent`,
+                                width: `240px`,
+                                height: `32px`,
+                                padding: `0 12px`,
+                                borderRadius: `3px`,
+                                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                                fontSize: `14px`,
+                                outline: `none`,
+                                textOverflow: `ellipses`,
+                                position: "absolute",
+                                left: "50%",
+                                marginLeft: "-120px"
                             }}
+                        />
+                    </StandaloneSearchBox>
+                </GoogleMap>
 
-                            callback={directionsCallback}
-                        />}
-
-                        {(!!response) && (<DirectionsRenderer options={{ directions: response }} />)}
-
-                        <StandaloneSearchBox
-                            onLoad={onLoad}
-                            onPlacesChanged={onPlacesChanged}>
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                style={{
-                                    boxSizing: `border-box`,
-                                    border: `1px solid transparent`,
-                                    width: `240px`,
-                                    height: `32px`,
-                                    padding: `0 12px`,
-                                    borderRadius: `3px`,
-                                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                                    fontSize: `14px`,
-                                    outline: `none`,
-                                    textOverflow: `ellipses`,
-                                    position: "absolute",
-                                    left: "50%",
-                                    marginLeft: "-120px"
-                                }}
-                            />
-                        </StandaloneSearchBox>
-                    </GoogleMap>
-
-                </LoadScript>
-            </Row>
-            <Row>
-                <Col>
-                    <br />
-                    <Dropdown className="d-inline">
-                        <Dropdown.Toggle variant="secondary" id="dropdown-basic" >
-                            Travel Mode: {travelMode}
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => changeTravelMode("DRIVING")}>Driving</Dropdown.Item>
-                            <Dropdown.Item onClick={() => changeTravelMode("BICYCLING")}>Bicycling</Dropdown.Item>
-                            <Dropdown.Item onClick={() => changeTravelMode("WALKING")}>Walking</Dropdown.Item>
-                            <Dropdown.Item onClick={() => changeTravelMode("TRANSIT")}>Transit</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Button variant="primary" onClick={toggleOnDirections}>Generate Trip</Button>
-                </Col>
-            </Row>
-
-
+            </LoadScript>
         </>
     )
 }
@@ -207,7 +206,6 @@ function CreateMarkers(props) {
         lng: props.marker.geometry.location.lng()
     }
 
-    console.log(props.marker);
     return (
         <Marker position={position}
             onClick={() => props.setPlace(props.marker)}

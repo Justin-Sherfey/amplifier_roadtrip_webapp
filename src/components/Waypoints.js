@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Form, Container, Row, Table } from "react-bootstrap";
+import { Dropdown, Button, Form, Container, Row, Col, Table } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import TripService from '../api/tripAPI';
@@ -12,9 +12,10 @@ function WaypointComponent() {
     const [waypoints, setWaypoints] = useState([]);
     const [selectedWaypoint, setSelectedWaypoint] = useState();
     const [trip, setTrip] = useState([]);
-    const [toggleMap, setToggleMap] = useState(true);
+    const [toggleMap, setToggleMap] = useState(false);
 
     useEffect(() => {
+
         !state ? navigate("/Trips") :
             WaypointService.getAllWaypoints(state.trip.tripId).then((res) => {
                 if (res.status === 200) {
@@ -23,9 +24,18 @@ function WaypointComponent() {
                     setToggleMap(false);
                     setToggleMap(true);
 
+
+
                 }
             })
     }, [navigate, state])
+
+    useEffect(() => {
+        if (!toggleMap) {
+            setToggleMap(true);
+        }
+    }, [toggleMap])
+
 
     const deleteWaypoint = (waypoint) => {
         WaypointService.deleteWaypoint(waypoint.waypointId).then((response) => {
@@ -39,7 +49,6 @@ function WaypointComponent() {
     const editWaypoint = (tempWaypoint) => {
         tempWaypoint['trip'] = { "tripId": trip.tripId }
         tempWaypoint['waypointId'] = selectedWaypoint.waypointId;
-        console.log(tempWaypoint);
         WaypointService.editWaypoint(tempWaypoint).then((res) => {
             if (res.status === 200) {
                 let tempWaypoints = waypoints;
@@ -95,7 +104,13 @@ function WaypointComponent() {
                 <Button variant="primary" onClick={createWaypoint}>Create Waypoint</Button>
 
             </Row>
-            {!!toggleMap && <WaypointEditor waypoints={waypoints} selectedWaypoint={selectedWaypoint} editWaypoint={editWaypoint} />}
+            <br />
+            <Row>
+
+                {!!toggleMap && <WaypointEditor waypoints={waypoints} selectedWaypoint={selectedWaypoint}
+                    editWaypoint={editWaypoint} setToggleMap={setToggleMap} />}
+
+            </Row>
         </Container>
     )
 }
@@ -143,11 +158,36 @@ function Waypoint(props) {
 
 function WaypointEditor(props) {
     const [place, setPlace] = useState();
+    const [travelMode, setTravelMode] = useState("DRIVING");
+
+    const changeTravelMode = (mode) => setTravelMode(mode)
+
+    const refreshMap = () => {
+        props.setToggleMap(false);
+    }
 
     return (
         <>
-            <GoogleMaps setPlace={setPlace} waypoints={props.waypoints} selectedWaypoint={props.selectedWaypoint} />
-            {!!place && <PlaceInformation place={place} waypoint={props.selectedWaypoint} editWaypoint={props.editWaypoint} />}
+            <Col>
+                <GoogleMaps setPlace={setPlace} waypoints={props.waypoints} selectedWaypoint={props.selectedWaypoint} travelMode={travelMode} />
+                <br />
+                <Dropdown className="d-inline">
+                    <Dropdown.Toggle variant="secondary" id="dropdown-basic" >
+                        Travel Mode: {travelMode}
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => changeTravelMode("DRIVING")}>Driving</Dropdown.Item>
+                        <Dropdown.Item onClick={() => changeTravelMode("BICYCLING")}>Bicycling</Dropdown.Item>
+                        <Dropdown.Item onClick={() => changeTravelMode("WALKING")}>Walking</Dropdown.Item>
+                        <Dropdown.Item onClick={() => changeTravelMode("TRANSIT")}>Transit</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+                <Button variant="primary" onClick={refreshMap}>Generate Trip</Button>
+            </Col>
+            <Col>
+                {!!place && <PlaceInformation place={place} waypoint={props.selectedWaypoint} editWaypoint={props.editWaypoint} />}
+            </Col>
         </>
     )
 }
@@ -159,7 +199,6 @@ function PlaceInformation(props) {
     const saveTrip = (formData) => {
         let tempWaypoint = props.waypoint;
         Object.entries(formData).map(([key, value]) => tempWaypoint[key] = value);
-        console.log(props.place);
         tempWaypoint["placeId"] = props.place["place_id"];
         props.editWaypoint(tempWaypoint);
     }

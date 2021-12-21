@@ -21,10 +21,7 @@ function WaypointComponent() {
                 if (res.status === 200) {
                     setTrip(state.trip);
                     setWaypoints(res.data)
-                    setToggleMap(false);
-                    setToggleMap(true);
-
-
+            
 
                 }
             })
